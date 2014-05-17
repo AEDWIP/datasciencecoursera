@@ -42,6 +42,19 @@
 # 5) now we can get the mean
 #   mv1$getmean()
 #
+# as an experiment to understand why '<<-' is needed I removed it from the code and
+# ran the following example 
+# > v2 <- 10:13
+# > mv2 <- makeVector(v2)
+# > c2 <- cachemean(mv2)
+# > mv2$get()
+# [1] 10 11 12 13
+# > mv2$getmean()
+# NULL
+#
+# the mean is calculated in and stored in a local variable in the scope of cachemean
+# with out '<<-' the value will not be assigned.
+#
 makeVector <- function(x = numeric()) {
   m <- NULL
   set <- function(y) {
