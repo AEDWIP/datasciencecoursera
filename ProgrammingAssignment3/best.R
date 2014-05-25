@@ -17,15 +17,35 @@
 #
 best <- function(state, outcome) {
   ## Read outcome data
-  outcome <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   
   ## Check that state and outcome are valid
-  listOfStates <- unique(outcome$State)
+  listOfStates <- unique(data$State)
   validState <- any(listOfStates == state)
   if (!validState) {
     emsg <- sprintf("Error: argument state = %s is invalid", state) 
     stop(emsg)
   }
+  
+  # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack
+  # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure
+  # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia
+  colIndex <- 0;
+  if ("heart attack" == outcome) {
+    colIndex <- which (colnames(outcome) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
+  }
+  else if ("heart failure" == outcome) {
+    colIndex <- which (colnames(outcome) == "outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
+  } else if ("pneumonia" == outcome) {
+    colIndex <- which (colnames(outcome) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
+  }
+  else {
+    emsg <- sprintf("Error: argument outcome = %s is invalid must be {heart failure, heart attack, pneumonia}", outcome) 
+    stop(emsg)
+  }
+  
+ 
+  
   ## Return hospital name in that state with lowest 30-day death
   ## rate
 }
