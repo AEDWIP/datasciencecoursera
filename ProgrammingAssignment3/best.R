@@ -44,6 +44,10 @@ best <- function(state, outcome) {
     stop(emsg)
   }
   
+  # the values might have strings like "not avalible" we need to convert. 
+  outComeData[, outComeColIndex] <- as.numeric(outComeData[, outComeColIndex])
+  
+  
   print(sprintf("AEDWIP: outComeColIndex: %s", outComeColIndex))
   
   ## Return hospital name in that state with lowest 30-day death
@@ -55,5 +59,9 @@ best <- function(state, outcome) {
   dataForState <- groupedByState[[stateIndex]] # [[5]] returns the fith element from the list
   print(sprintf("AEDWIP: class for dataForState: %s", class(dataForState)))
   
-  min(dataForState[outComeColIndex])
+  lowestMortality <- min(dataForState[outComeColIndex], na.rm = TRUE)
+  print(sprintf("AEDWIP lowestMortality: %s", lowestMortality))
+  
+  # get the index for rows equal to the lowest Mortatlity rate
+  bestHospitals = dataForState[dataForState[outComeColIndex] == lowestMortality]
 }
