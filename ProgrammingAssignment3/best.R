@@ -35,7 +35,7 @@ best <- function(state, outcome) {
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
   }
   else if ("heart failure" == outcome) {
-    outComeColIndex <- which (colnames(outComeData) == "outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
+    outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
   } else if ("pneumonia" == outcome) {
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
   }
@@ -54,4 +54,6 @@ best <- function(state, outcome) {
   print(sprintf("AEDWIP: stateIndex: %s", stateIndex))
   dataForState <- groupedByState[[stateIndex]] # [[5]] returns the fith element from the list
   print(sprintf("AEDWIP: class for dataForState: %s", class(dataForState)))
+  
+  min(dataForState[outComeColIndex])
 }
