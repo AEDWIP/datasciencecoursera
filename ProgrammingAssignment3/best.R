@@ -17,10 +17,10 @@
 #
 best <- function(state, outcome) {
   ## Read outcome data
-  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+  outComeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   
   ## Check that state and outcome are valid
-  listOfStates <- unique(data$State)
+  listOfStates <- unique(outComeData$State)
   validState <- any(listOfStates == state)
   if (!validState) {
     emsg <- sprintf("Error: argument state = %s is invalid", state) 
@@ -30,22 +30,28 @@ best <- function(state, outcome) {
   # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack
   # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure
   # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia
-  colIndex <- 0;
+  outComeColIndex <- 0;
   if ("heart attack" == outcome) {
-    colIndex <- which (colnames(outcome) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
+    outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
   }
   else if ("heart failure" == outcome) {
-    colIndex <- which (colnames(outcome) == "outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
+    outComeColIndex <- which (colnames(outComeData) == "outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
   } else if ("pneumonia" == outcome) {
-    colIndex <- which (colnames(outcome) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
+    outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
   }
   else {
     emsg <- sprintf("Error: argument outcome = %s is invalid must be {heart failure, heart attack, pneumonia}", outcome) 
     stop(emsg)
   }
   
- 
+  print(sprintf("AEDWIP: outComeColIndex: %s", outComeColIndex))
   
   ## Return hospital name in that state with lowest 30-day death
   ## rate
+  
+  groupedByState <- split(outComeData, outComeData$State)
+  stateIndex <- which(names(groupedByState) == state)
+  print(sprintf("AEDWIP: stateIndex: %s", stateIndex))
+  dataForState <- groupedByState[[stateIndex]] # [[5]] returns the fith element from the list
+  print(sprintf("AEDWIP: class for dataForState: %s", class(dataForState)))
 }
