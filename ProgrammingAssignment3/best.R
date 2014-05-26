@@ -15,7 +15,7 @@
 #
 #   if several hospitals are tied for best, return the hospital that comes first alphabetically
 
-# best <- function(state, outcome) {
+best <- function(state, outcome) {
   ## Read outcome data
   outComeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   
@@ -23,7 +23,9 @@
   listOfStates <- unique(outComeData$State)
   validState <- any(listOfStates == state)
   if (!validState) {
-    emsg <- sprintf("Error: argument state = %s is invalid", state) 
+    #emsg <- sprintf("Error: argument state = %s is invalid", state) 
+    # Error in best("BB", "heart attack") : invalid state
+    emsg <- sprintf("Error in best(\"%s\", \"%s\") : invalid state", state, outcome)
     stop(emsg)
   }
   
@@ -42,7 +44,8 @@
     outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
   } else {
-    emsg <- sprintf("Error: argument outcome = %s is invalid must be {heart failure, heart attack, pneumonia}", outcome) 
+    #emsg <- sprintf("Error: argument outcome = %s is invalid must be {heart failure, heart attack, pneumonia}", outcome) 
+    emsg <- sprintf("Error in best(\"%s\", \"%s\") : invalid outcome", state, outcome)
     stop(emsg)
   }
   
@@ -75,4 +78,4 @@
   #print(sprintf("AEDWIP: class for bestHospitals: %s", class(bestHospitals)))
   #print(sprintf("AEDWIP: attributes for bestHospitals: %s", attributes(bestHospitals)))
   #print(bestHospitals[[2]])
-#}
+}
