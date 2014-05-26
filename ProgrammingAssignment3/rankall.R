@@ -21,7 +21,7 @@ rankAllBest <- function(dataForState, num, outComeColName) {
   c(hospital$Hospital.Name, hospital$State)
 }
 
-#rankall <- function(outcome, num = "best") {
+rankall <- function(outcome, num = "best") {
   ## Read outcome data
   outComeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   
@@ -66,7 +66,10 @@ rankAllBest <- function(dataForState, num, outComeColName) {
   groupedByState <- split(orderedData, orderedData$State)
   ret <- sapply(groupedByState, rankAllBest, num, outComeColName)
   
-  # strange we need to transpose ret to get the output formated as row vectors
-  t(ret)
-#}
+  # ret is a list
+  df <- data.frame(ret)
+  
+  # strange we need to transpose the df
+  t(df)
+}
   
