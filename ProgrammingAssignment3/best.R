@@ -14,6 +14,9 @@
 #   outcome should be excluded from the set of hospitals when deciding the rankings.
 #
 #   if several hospitals are tied for best, return the hospital that comes first alphabetically
+#
+#   > best("MD", "pneumonia")
+#   [1] "GREATER BALTIMORE MEDICAL CENTER"
 
 best <- function(state, outcome) {
   ## Read outcome data
