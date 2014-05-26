@@ -53,19 +53,19 @@ best <- function(state, outcome) {
   outComeData[, outComeColIndex] <- as.numeric(outComeData[, outComeColIndex])
   
   
-  print(sprintf("AEDWIP: outComeColIndex: %s", outComeColIndex))
+  #print(sprintf("AEDWIP: outComeColIndex: %s", outComeColIndex))
   
   ## Return hospital name in that state with lowest 30-day death
   ## rate
   
   groupedByState <- split(outComeData, outComeData$State)
   stateIndex <- which(names(groupedByState) == state)
-  print(sprintf("AEDWIP: stateIndex: %s", stateIndex))
+  #print(sprintf("AEDWIP: stateIndex: %s", stateIndex))
   dataForState <- groupedByState[[stateIndex]] # [[5]] returns the fith element from the list
-  print(sprintf("AEDWIP: class for dataForState: %s", class(dataForState)))
+  #print(sprintf("AEDWIP: class for dataForState: %s", class(dataForState)))
   
   lowestMortality <- min(dataForState[outComeColIndex], na.rm = TRUE)
-  print(sprintf("AEDWIP lowestMortality: %s", lowestMortality))
+  #print(sprintf("AEDWIP lowestMortality: %s", lowestMortality))
   
   # get the index for rows equal to the lowest Mortatlity rate
   bestHospitalsIndex <- which(dataForState[outComeColIndex] == lowestMortality)
@@ -73,9 +73,9 @@ best <- function(state, outcome) {
   # data frames are lists
   # each "item" in the list is a column, ie. its column major not row major !
   
+  # get the best rows
   bestHospitals <- dataForState[bestHospitalsIndex,]
-  bestHospitals$Hospital.Name
-  #print(sprintf("AEDWIP: class for bestHospitals: %s", class(bestHospitals)))
-  #print(sprintf("AEDWIP: attributes for bestHospitals: %s", attributes(bestHospitals)))
-  #print(bestHospitals[[2]])
+  
+  # if there are several "best" return alphabitize and return the first one
+  sort(bestHospitals$Hospital.Name)[1]
 }
