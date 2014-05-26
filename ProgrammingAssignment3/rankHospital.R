@@ -74,9 +74,9 @@ rankhospital <- function(state, outcome, num = "best") {
   bad <- is.na(sortedDataForState[outComeColIndex])
   numRows <- length(bad[bad == FALSE])
   
-  if (is.numeric(num) && num > numRows) {
-    return(NaN)
-  } else if (is.numeric(num) && num <= numRows) {
+  if (is.numeric(num) && (num > numRows)) {
+    return(NA)
+  } else if (is.numeric(num) && (num <= numRows)) {
     hospital <- sortedDataForState[num,]
   } else if ("best" == num) {
     hospital <- sortedDataForState[1,]    
