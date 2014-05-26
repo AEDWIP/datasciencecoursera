@@ -42,30 +42,46 @@ rankhospital <- function(state, outcome, num = "best") {
   if ("heart attack" == outcome) {
     outComeColName <- 'Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack'
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
+    # the values might have strings like "not avalible" we need to convert. 
+    # generates warning: NAs introduced by coercion 
+    dataForState[, outComeColIndex] <- as.numeric(dataForState[, outComeColIndex])
     sortedDataForState <- dataForState[with(dataForState, order(Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack, Hospital.Name)),]
   } else if ("heart failure" == outcome) {
     outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
+    # the values might have strings like "not avalible" we need to convert. 
+    # generates warning: NAs introduced by coercion 
+    dataForState[, outComeColIndex] <- as.numeric(dataForState[, outComeColIndex])
     sortedDataForState <- dataForState[with(dataForState, order(Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure, Hospital.Name)),]
   } else if ("pneumonia" == outcome) {
     outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
+    # the values might have strings like "not avalible" we need to convert. 
+    # generates warning: NAs introduced by coercion
+    dataForState[, outComeColIndex] <- as.numeric(dataForState[, outComeColIndex])
     sortedDataForState <- dataForState[with(dataForState, order(Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia, Hospital.Name)),]
   } else {
     emsg <- sprintf("Error in rankhospital(\"%s\", \"%s\ \"%s\") : invalid outcome", state, outcome, num)
     stop(emsg)
   }
   
+  
+
  
   ## Return hospital name in that state with the given rank
-  if (is.numeric(num) && num > nrow(sortedDataForState)) {
+  
+  # find the number of rows have data
+  bad <- is.na(sortedDataForState[outComeColIndex])
+  numRows <- length(bad[bad == FALSE])
+  
+  if (is.numeric(num) && num > numRows) {
     return(NaN)
-  } else if (is.numeric(num) && num < nrow(sortedDataForState)) {
+  } else if (is.numeric(num) && num <= numRows) {
     hospital <- sortedDataForState[num,]
   } else if ("best" == num) {
     hospital <- sortedDataForState[1,]    
   } else if ("worst" == num) {
-    worst <- nrow(sortedDataForState)
+    worst <- numRows
     hospital <- sortedDataForState[worst,]    
   } else {
     emsg <- sprintf("Error in rankhospital(\"%s\", \"%s\ \"%s\") : invalid num", state, outcome, num)

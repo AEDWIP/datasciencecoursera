@@ -53,6 +53,7 @@ best <- function(state, outcome) {
   }
   
   # the values might have strings like "not avalible" we need to convert. 
+  # generates warning: NAs introduced by coercion 
   outComeData[, outComeColIndex] <- as.numeric(outComeData[, outComeColIndex])
   
   
