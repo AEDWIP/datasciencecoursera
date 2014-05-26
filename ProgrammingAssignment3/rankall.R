@@ -70,6 +70,8 @@ rankall <- function(outcome, num = "best") {
   df <- data.frame(ret)
   
   # strange we need to transpose the df
-  t(df)
+  df <- data.frame(t(df))
+  colnames(df) <- c('hospital', 'state')
+  df
 }
   
