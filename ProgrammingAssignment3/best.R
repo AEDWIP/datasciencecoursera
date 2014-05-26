@@ -14,8 +14,8 @@
 #   outcome should be excluded from the set of hospitals when deciding the rankings.
 #
 #   if several hospitals are tied for best, return the hospital that comes first alphabetically
-#
-best <- function(state, outcome) {
+
+# best <- function(state, outcome) {
   ## Read outcome data
   outComeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   
@@ -31,15 +31,17 @@ best <- function(state, outcome) {
   # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure
   # outcome$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia
   outComeColIndex <- 0;
+  outComeColName <- "AEDWIP"
   if ("heart attack" == outcome) {
+    outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
-  }
-  else if ("heart failure" == outcome) {
+  } else if ("heart failure" == outcome) {
+    outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
   } else if ("pneumonia" == outcome) {
+    outComeColName <- "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
     outComeColIndex <- which (colnames(outComeData) == "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
-  }
-  else {
+  } else {
     emsg <- sprintf("Error: argument outcome = %s is invalid must be {heart failure, heart attack, pneumonia}", outcome) 
     stop(emsg)
   }
@@ -63,5 +65,14 @@ best <- function(state, outcome) {
   print(sprintf("AEDWIP lowestMortality: %s", lowestMortality))
   
   # get the index for rows equal to the lowest Mortatlity rate
-  bestHospitals = dataForState[dataForState[outComeColIndex] == lowestMortality]
-}
+  bestHospitalsIndex <- which(dataForState[outComeColIndex] == lowestMortality)
+  # dataForState is a data.Frame. (like a table in SQL)
+  # data frames are lists
+  # each "item" in the list is a column, ie. its column major not row major !
+  
+  bestHospitals <- dataForState[bestHospitalsIndex,]
+  bestHospitals$Hospital.Name
+  #print(sprintf("AEDWIP: class for bestHospitals: %s", class(bestHospitals)))
+  #print(sprintf("AEDWIP: attributes for bestHospitals: %s", attributes(bestHospitals)))
+  #print(bestHospitals[[2]])
+#}
