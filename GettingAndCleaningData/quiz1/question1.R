@@ -30,6 +30,7 @@
 #
 library(data.table)
 #
+# could we use read.table ? in data.table
 housingDataDF <- read.csv("./data/microDataHousingServeyIdaho.csv")
 housingDataDT <- data.table(housingDataDF)
 
