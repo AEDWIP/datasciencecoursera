@@ -67,7 +67,10 @@ allY <- rbind(yTrain, yTest)
 X <- allX[, grep("mean|std", colNames)]
 
 #
-# save X
+# save X and y
 #
-xFileName <- sprintf("%s/%s", dataDir, "X.data.frame")
+xFileName <- sprintf("%s/%s", dataDir, "X.data.frame") # matrix are typically named using upper case
 write.table(X, file=xFileName)
+
+yFileName <- sprintf("%s/%s", dataDir, "y.data.frame") # vectors are typically named using lower case
+write.table(allY, yFileName)
