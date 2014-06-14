@@ -53,3 +53,11 @@ yTrain <- read.table(yTrainFile)
 #
 allX <- rbind(xTrain, xTest)
 allY <- rbind(yTrain, yTest)
+
+#
+# find all the featues with either 'mean' or 'std' in their name
+#
+X <- allX[, grep("mean|std", colNames)]
+
+
+
