@@ -19,7 +19,7 @@ if (!file.exists(dataFile)) {
 rawDataDir <- sprintf("%s/%s", dataDir, "UCI HAR Dataset")
 
 #
-# combine the training and test data sets
+# read the source / original data traing and test data files
 #
 
 #
@@ -55,9 +55,12 @@ allX <- rbind(xTrain, xTest)
 allY <- rbind(yTrain, yTest)
 
 #
-# find all the featues with either 'mean' or 'std' in their name
+# find all the features with either 'mean' or 'std' in their name
 #
 X <- allX[, grep("mean|std", colNames)]
 
-
-
+#
+# save X
+#
+xFileName <- sprintf("%s/%s", dataDir, "X.data.frame")
+write.table(X, file=xFileName)
