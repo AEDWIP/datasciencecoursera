@@ -10,4 +10,7 @@ fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%2
 dataDir <- "data/"
 dataFile <- sprintf("%s%s", dataDir, "Dataset.zip")
 if (!file.exists(dataDir)) { dir.create(dataDir)}
-if (!file.exists(dataFile)) {download.file(fileURL, destfile=dataFile, method="curl")}
+if (!file.exists(dataFile)) {
+  download.file(fileURL, destfile=dataFile, method="curl")
+  unzip(dataFile, exdir=dataDir)
+}
