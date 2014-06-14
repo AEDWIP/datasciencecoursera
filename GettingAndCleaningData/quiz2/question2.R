@@ -19,3 +19,7 @@ acs <- data.table(acsDF)
 
 # Which of the following commands will select only the data for the probability weights pwgtp1 with ages less than 50?
 sqldf("select pwgtp1 from acs where AGEP < 50")
+
+# question 3
+# Using the same data frame you created in the previous problem, what is the equivalent function to unique(acs$AGEP)
+# sqldf("select distinct AGEP from acs")
