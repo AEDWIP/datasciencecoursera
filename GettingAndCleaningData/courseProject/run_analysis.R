@@ -27,7 +27,6 @@ rawDataDir <- sprintf("%s/%s", dataDir, "UCI HAR Dataset")
 #
 numFeatures <- 561
 featuresFile <- sprintf("%s/%s", rawDataDir, "features.txt")
-
 features <- read.table(featuresFile, stringsAsFactors=FALSE)
 colNames <- features[,2]
 
@@ -39,13 +38,21 @@ xTest <- read.table(xTestFile, col.names=colNames)
 xTrainFile <- sprintf("%s/%s", rawDataDir, "train/X_train.txt")
 xTrain <- read.table(xTrainFile, col.names=colNames)
 
+activityLableFile <- sprintf("%s/%s", rawDataDir, "activity_labels.txt");
+activityFactors <- read.table(activityLableFile)
+
 # read yTest
 yTestFile <- sprintf("%s/%s", rawDataDir, "test/y_test.txt")
 yTest <- read.table(yTestFile)
+yTest$V1 <- factor(yTest$V1)
+#levels(yTest$V1) <- attributes(activityFactors$V2)$levels
+levels(yTest$V1) <- activityFactors$V2 # instead of 1, 2, 3, we want leveled factors ie. walking, running, ..
 
 # read yTrain
 yTrainFile <- sprintf("%s/%s", rawDataDir, "train/y_train.txt")
 yTrain <- read.table(yTrainFile)
+yTrain$V1 <- factor(yTrain$V1)
+levels(yTrain$V1) <- activityFactors$V2 # instead of 1, 2, 3, we want leveled factors ie. walking, running, ..
 
 
 #
