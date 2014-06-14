@@ -13,4 +13,7 @@ if (!file.exists(dataDir)) { dir.create(dataDir)}
 if (!file.exists(dataFile)) {
   download.file(fileURL, destfile=dataFile, method="curl")
   unzip(dataFile, exdir=dataDir)
+  dateDownLoaded <- date()
+  write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
 }
+rawDataDir <- sprintf("%s/%s", dataDir, "UCI HAR Dataset")
