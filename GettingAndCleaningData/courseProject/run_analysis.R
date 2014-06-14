@@ -26,15 +26,30 @@ rawDataDir <- sprintf("%s/%s", dataDir, "UCI HAR Dataset")
 # I got the numFeatures from UCI HAR Dataset/features.txt (It is also mentioned in README.txt)
 #
 numFeatures <- 561
-xTestFile <- sprintf("%s/%s", rawDataDir, "test/X_test.txt")
-xTrainFile <- sprintf("%s/%s", rawDataDir, "train/X_train.txt")
-yTestFile <- sprintf("%s/%s", rawDataDir, "test/y_test.txt")
-yTrainFile <- sprintf("%s/%s", rawDataDir, "train/y_train.txt")
 featuresFile <- sprintf("%s/%s", rawDataDir, "features.txt")
 
 features <- read.table(featuresFile, stringsAsFactors=FALSE)
+colNames <- features[,2]
 
 # read XTest
-colNames <- features[,2]
+xTestFile <- sprintf("%s/%s", rawDataDir, "test/X_test.txt")
 xTest <- read.table(xTestFile, col.names=colNames)
 
+# read XTrain
+xTrainFile <- sprintf("%s/%s", rawDataDir, "train/X_train.txt")
+xTrain <- read.table(xTrainFile, col.names=colNames)
+
+# read yTest
+yTestFile <- sprintf("%s/%s", rawDataDir, "test/y_test.txt")
+yTest <- read.table(yTestFile)
+
+# read yTrain
+yTrainFile <- sprintf("%s/%s", rawDataDir, "train/y_train.txt")
+yTrain <- read.table(yTrainFile)
+
+
+#
+# combine the test and training data
+#
+allX <- rbind(xTrain, xTest)
+allY <- rbind(yTrain, yTest)
