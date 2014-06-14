@@ -8,6 +8,6 @@
 # download data 
 fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 dataDir <- "data/"
-dataFile <- paste(dataDir, "Dataset.zip", "") # paste is really string concatenation
+dataFile <- sprintf("%s%s", dataDir, "Dataset.zip")
 if (!file.exists(dataDir)) { dir.create(dataDir)}
 if (!file.exists(dataFile)) {download.file(fileURL, destfile=dataFile, method="curl")}
