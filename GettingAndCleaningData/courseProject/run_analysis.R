@@ -17,3 +17,24 @@ if (!file.exists(dataFile)) {
   write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
 }
 rawDataDir <- sprintf("%s/%s", dataDir, "UCI HAR Dataset")
+
+#
+# combine the training and test data sets
+#
+
+#
+# I got the numFeatures from UCI HAR Dataset/features.txt (It is also mentioned in README.txt)
+#
+numFeatures <- 561
+xTestFile <- sprintf("%s/%s", rawDataDir, "test/X_test.txt")
+xTrainFile <- sprintf("%s/%s", rawDataDir, "train/X_train.txt")
+yTestFile <- sprintf("%s/%s", rawDataDir, "test/y_test.txt")
+yTrainFile <- sprintf("%s/%s", rawDataDir, "train/y_train.txt")
+featuresFile <- sprintf("%s/%s", rawDataDir, "features.txt")
+
+features <- read.table(featuresFile, stringsAsFactors=FALSE)
+
+# read XTest
+colNames <- features[,2]
+xTest <- read.table(xTestFile, col.names=colNames)
+
