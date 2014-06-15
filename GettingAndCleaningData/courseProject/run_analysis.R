@@ -60,6 +60,7 @@ levels(yTrain$V1) <- activityFactors$V2 # instead of 1, 2, 3, we want leveled fa
 #
 allX <- rbind(xTrain, xTest)
 allY <- rbind(yTrain, yTest)
+colnames(allY) <- "activity" # give the column a name
 
 #
 # find all the features with either 'mean' or 'std' in their name
@@ -74,3 +75,19 @@ write.table(X, file=xFileName)
 
 yFileName <- sprintf("%s/%s", dataDir, "y.data.frame") # vectors are typically named using lower case
 write.table(allY, yFileName)
+
+#
+# create a single matrix from X, y, and the subject id vector
+#
+
+subjectTestFile <- sprintf("%s/%s", rawDataDir, "test/subject_test.txt")
+subjectTest <- read.table(subjectTestFile)
+
+subjectTrainFile <- sprintf("%s/%s", rawDataDir, "train/subject_train.txt")
+subjectTrain <- read.table(subjectTrainFile)
+
+allSubjects <- rbind(subjectTrain, subjectTest)
+colnames(allSubjects) <- "subjectId" # give the column a name
+
+M <- cbind(allSubjects, allY, X)
+
