@@ -93,15 +93,12 @@ M <- cbind(allSubjects, allY, X)
 
 #
 # create a new tidy data set with the average of each variable for each activity and each subject. 
+# ref: http://www.cookbook-r.com/Manipulating_data/Summarizing_data/
+# ref: http://www.inside-r.org/packages/cran/plyr/docs/colwise
 #
+library(plyr)
 
-# sort by subjectId then activity
-orderedM <- M[order(M$subjectId, M$activity), ]
+tidyM <- ddply(M, c("subjectId", "activity"), colwise(mean))
+tidyFileName <- sprintf("%s/%s", dataDir, "tidy.data.frame") 
+write.table(tidyM, tidyFileName)
 
-# orderedM[(orderedM$subjectId == 25) , ] # select all samples collected for subject 25
-
-# calculate teh column mean for all 'mean' and 'standard deviation columns
-# aedwip <- colMeans(orderedM[,3:81])
-
-#orderedMTable <- data.table(orderedM)
-# aedwip <- orderedMTable[, sum(tBodyAcc.mean...X), by=list(subjectId, activity)]
