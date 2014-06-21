@@ -10,3 +10,15 @@ if (!file.exists(dataFile)) {
   dateDownLoaded <- date()
   write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
 }
+
+
+# Use the parameter native=TRUE. What are the 30th and 80th quantiles of the 
+# resulting data? (some Linux systems may produce an answer 638 different for the 
+# 30th quantile)
+
+# If native is TRUE then an object of the class nativeRaster is returned instead. 
+img <- readJPEG(dataFile, native=TRUE)
+print(quantile(img, probs=c(0.3, 0.8)))
+# 30%       80% 
+#   -15259150 -10575416 
+# > 
