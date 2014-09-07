@@ -50,4 +50,4 @@ g <- grep("United", cnl)
 # [1] "United Arab Emirates" "United Kingdom"       "United States"       
 # > 
 
-print(sprintf("AEDWIP question 3) best answer is '*United' '*' is not needed %s", cnl[g]))
+print(sprintf("AEDWIP question 3) best answer is '^United' '^' is not needed %s", cnl[g]))
