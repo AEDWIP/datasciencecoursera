@@ -33,5 +33,5 @@ febData <- allData[(allData$timeStamp >= begin) & (allData$timeStamp < end) ,]
 # hpc2 <- hpc[min(which(hpc$Date == "1/2/2007")):max(which(hpc$Date == "2/2/2007")),]
 #
 
-rm(allData) # clean up memory
+rm(allData, timeStamp, begin, end) # clean up memory
 
