@@ -35,3 +35,23 @@ febData <- allData[(allData$timeStamp >= begin) & (allData$timeStamp < end) ,]
 
 rm(allData, timeStamp, begin, end) # clean up memory
 
+#
+# merge all the sub-metering data into a single col
+# use a factor to identify meter 1, 2, and 3
+# we'll need this in plot 3 and 4
+#
+
+levels <- c("s1", "s2", "s3")
+name <- c("sub_metering", "timeStamp", "meterNum")
+
+sm1 <- data.frame(febData$Sub_metering_1, febData$timeStamp, factor(rep("s1", nrow(febData)), levels))
+names(sm1) <- name;
+
+sm2 <- data.frame(febData$Sub_metering_2, febData$timeStamp, factor(rep("s2", nrow(febData)), levels))
+names(sm2) <- name;
+
+sm3 <- data.frame(febData$Sub_metering_3, febData$timeStamp, factor(rep("s3", nrow(febData)), levels))
+names(sm3) <- name;
+
+plotData <- rbind(sm1, sm2, sm3)
+

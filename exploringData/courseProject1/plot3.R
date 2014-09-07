@@ -7,24 +7,6 @@
 source("loadData.R")
 
 #
-# merge all the submetering data into a single col
-# use a factor to identify meter 1, 2, and 3
-#
-levels <- c("s1", "s2", "s3")
-name <- c("sub_metering", "timeStamp", "meterNum")
-
-sm1 <- data.frame(febData$Sub_metering_1, febData$timeStamp, factor(rep("s1", nrow(febData)), levels))
-names(sm1) <- name;
-
-sm2 <- data.frame(febData$Sub_metering_2, febData$timeStamp, factor(rep("s2", nrow(febData)), levels))
-names(sm2) <- name;
-
-sm3 <- data.frame(febData$Sub_metering_3, febData$timeStamp, factor(rep("s3", nrow(febData)), levels))
-names(sm3) <- name;
-
-plotData <- rbind(sm1, sm2, sm3)
-
-#
 # graph the data
 #
 
