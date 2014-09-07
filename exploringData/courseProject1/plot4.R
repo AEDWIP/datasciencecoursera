@@ -9,7 +9,7 @@ source("loadData.R")
 # graph the data
 #
 
-#png("plot4.png", width = 480, height = 480, bg="grey")
+png("plot4.png", width = 480, height = 480, bg="grey")
 
 par(bg="grey")
 par(mfrow = c(2, 2))
