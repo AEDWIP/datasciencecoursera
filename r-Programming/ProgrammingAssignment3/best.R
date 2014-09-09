@@ -1,22 +1,19 @@
 
+# 
+# args: state: a 2 char abrivation for each state outcome: "heart attack",
+# "heart failure", or "pneumonia".
+# 
+# returns: a character vector with the name of the hospital that has the best 
+# (i.e. lowest) 30-day mortality for the specified outcome in that state.
+# 
+# Hospitals that do not have data on a particular outcome should be excluded
+# from the set of hospitals when deciding the rankings.
+# 
+# if several hospitals are tied for best, return the hospital that comes first
+# alphabetically
+# 
+# > best("MD", "pneumonia") [1] "GREATER BALTIMORE MEDICAL CENTER"
 #
-# args:
-#   state: 
-#       a 2 char abrivation for each state
-#   outcome:
-#       "heart attack", "heart failure", or "pneumonia".
-#
-# returns:
-#   a character vector with the name of the hospital that has the best 
-#   (i.e. lowest) 30-day mortality for the specified outcome in that state.
-#
-#   Hospitals that do not have data on a particular
-#   outcome should be excluded from the set of hospitals when deciding the rankings.
-#
-#   if several hospitals are tied for best, return the hospital that comes first alphabetically
-#
-#   > best("MD", "pneumonia")
-#   [1] "GREATER BALTIMORE MEDICAL CENTER"
 
 best <- function(state, outcome) {
   ## Read outcome data
