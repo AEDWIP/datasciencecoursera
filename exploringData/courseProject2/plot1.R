@@ -28,6 +28,9 @@ groupByYears <- split(NEI, NEI$year)
 emissionTotals <- sapply(groupByYears, function(x){sum(x$Emissions)})
 xData <- names(emissionTotals)
 yData <- as.vector(emissionTotals)
+
+# begin graph operations
+png("plot1.png", width = 480, height = 480)
 plot(
   x = xData, 
   y = yData,
@@ -38,6 +41,7 @@ plot(
 
 # join the corresponding points with line segments.
 lines(xData, yData)
+dev.off() # flush and close file
 
 
 
