@@ -23,12 +23,6 @@ if (!exists("NEI")) {
 # 1: find the SCC char strings that corespond to the coal combustion
 #
 
-# i <- grep(pattern = "coal", 
-#           x = as.character(levels(SCC$EI.Sector)), 
-#           ignore.case = TRUE,
-#           value = FALSE
-#           )
-
 i <- grep (
   pattern = "coal",
   x = SCC$Short.Name,
@@ -43,13 +37,25 @@ l <- SCC$Short.Name == i
 ll <- which(l) # get index for rows we want
 SCCIndex <- SCC[ll, "SCC"]
 
-match(x = SCCIndex, table=NEI)
+data <- NEI[NEI$SCC == as.character(SCCIndex), ]
 
+groupByYears <- split(data, data$year)
+emissionTotals <- sapply(groupByYears, function(x){sum(x$Emissions)})
 #
 # begin graph ggplot2 operations 
 #
 library(ggplot2)
-# png("plot4.png", width = 480, height = 480)
+png("plot4.png", width = 480, height = 480)
+
+pData <- data.frame(year = as.numeric(names(groupByYears)), emissionTotals = emissionTotals)
+p <- qplot(x = year,
+           y = emissionTotals,
+           data = pData,
+           geom = "line"
+)
+#p <- p + geom_line(color="red")
+p <- p + ggtitle("emissions from coal combustion-related")
+p + ylab("total emissions")
 
 
-# dev.off() # flush and close file
+dev.off() # flush and close file
