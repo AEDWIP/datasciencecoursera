@@ -5,6 +5,8 @@
 # Andy@SantaCruzIntegration.com
 #
 
+#setwd("~/workSpace/datasciencecoursera/johnsHopkinsUniv/datasciencecoursera.git/exploringData/courseProject2")
+
 #
 # Have total emissions from PM2.5 decreased in the United States from 1999 to
 # 2008? Using the base plotting system, make a plot showing the total PM2.5
@@ -24,14 +26,19 @@ if (!exists("NEI")) {
 #
 groupByYears <- split(NEI, NEI$year)
 emissionTotals <- sapply(groupByYears, function(x){sum(x$Emissions)})
+xData <- names(emissionTotals)
+yData <- as.vector(emissionTotals)
 plot(
-  x = names(emissionTotals), 
-  y = as.vector(emissionTotals),
+  x = xData, 
+  y = yData,
   xlab = "year",
-  ylab = "emission total"
+  ylab = "emission total", 
+  type="n" # do not graph yet
   )
 
-AEDWIP, connect with a line, add main, how to deal with y scale? should we use log(y)
+# join the corresponding points with line segments.
+lines(xData, yData)
+
 
 
 
