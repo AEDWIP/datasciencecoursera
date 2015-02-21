@@ -29,6 +29,15 @@ From the Central Limit Theorm we know that as the mean of a sample of expoential
 
 ---
 
+We'll start by drawing 1000 samples each of a relatively small size of 10
+
+```{r}
+mns = NULL
+for (i in 1 : 1000) mns = c(mns, mean(rexp(10)))
+hist(mns, main="Histogram of mean of 1000 samples of rexp(10)")
+```
+
+---
 
 **Graph of 1000 random variables selected from a uniform distribution**
 
