@@ -29,7 +29,7 @@ From the Central Limit Theorm we know that as the mean of a sample of expoential
 
 ---
 
-1.a) Show the sample mean and compare it to the theoretical mean of the distribution.
+1. Show the sample mean and compare it to the theoretical mean of the distribution.
 
 We'll start by drawing 1000 samples each of a relatively small size of 10
 
@@ -58,3 +58,32 @@ sampleMean <- mean(mns)
 sampleMean
 ```
 ---
+
+2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+
+Now lets repeat the above simulations this time instead of looking at the sample mean lets look at the variance. Once again the Central Limit Theorm applies. N
+
+```{r}
+mvd = NULL
+for (i in 1 : 1000) mvd = c(mvd, var(rexp(10, lambda)))
+hist(mvd, main="Histogram of variance of 1000 samples of rexp(10, lambda)")
+```
+
+```{r}
+mvd = NULL
+for (i in 1 : 1000) mvd = c(mvd, var(rexp(40, lambda)))
+hist(mvd, main="Histogram of variance of 1000 samples of rexp(40, lambda)")
+```
+
+clearly as the sample increases the distribution of sample variance become more bell shaped.
+
+Finally lets compare our how or sample variance compares the theoretic population variance of (1/lambda)^2 which is `r (1/lambda)^2`. Notice it is very close to the theortical variance of the population
+
+```{r}
+sampleMeanVar <- mean(mvd)
+sampleMeanVar
+```
+
+
+
+
