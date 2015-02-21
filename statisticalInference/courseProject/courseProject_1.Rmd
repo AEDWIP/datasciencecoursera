@@ -25,26 +25,37 @@ hist(rexp(numObservations,lambda))
 ```
 
 
-From the Central Limit Theorm we know that as the mean of a sample of expoentially distributed random variable should be normally distributed with the estimated becomming a better approximation of the true population mean as the sample size increase. We will use the following simulation to see if that is true
+From the Central Limit Theorm we know that as the mean of a sample of expoentially distributed random variable should be normally distributed with the estimated becomming a better approximation of the true population mean as the sample size increase. We will use the following simulation to see if that is true. We'll also see how well the Central Limit Theorm applies to the population variance.
 
 ---
+
+1.a) Show the sample mean and compare it to the theoretical mean of the distribution.
 
 We'll start by drawing 1000 samples each of a relatively small size of 10
 
 ```{r}
 mns = NULL
-for (i in 1 : 1000) mns = c(mns, mean(rexp(10)))
-hist(mns, main="Histogram of mean of 1000 samples of rexp(10)")
+for (i in 1 : 1000) mns = c(mns, mean(rexp(10, lambda)))
+hist(mns, main="Histogram of mean of 1000 samples of rexp(10, lambda)")
 ```
 
 ---
 
-Lets draw another 1000 samples this time lets increase the sample size to 40. Notice how as the sample sized increased the 'bell shape' seems more balanced. I.E the center of mass is more evenly distributed around 1.0
+Lets draw another 1000 samples this time lets increase the sample size to 40. Notice how as the sample sized increased the 'bell shape' seems more balanced. I.E the center of mass is more evenly distributed around 5.0
 
 ```{r}
 mns = NULL
-for (i in 1 : 1000) mns = c(mns, mean(rexp(40)))
-hist(mns, main="Histogram of mean of 1000 samples of rexp(40)")
+for (i in 1 : 1000) mns = c(mns, mean(rexp(40, lambda)))
+hist(mns, main="Histogram of mean of 1000 samples of rexp(40, lambda)")
+```
+---
+
+Now, lets compare how the sample mean compares to theoretic mean of the population. We know the population mean = 1/lambda which is `r 1.0/lambda`. Notic the value from our simulation is very close tothe theoretic population mean
+
+
+```{r}
+sampleMean <- mean(mns)
+sampleMean
 ```
 ---
 
