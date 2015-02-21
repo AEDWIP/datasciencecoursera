@@ -12,9 +12,23 @@ https://github.com/bcaffo/courses/blob/master/06_StatisticalInference/07_Asymp
 
 ### 1) Investigate the exponential distribution in R and compare it with the Central Limit Theorem.
 
+"The expotential distrubtion is the probability distribution that describes the time between events in a Poisson process, i.e. a process in which events occur continuously and independently at a constant average rate.""
+
+reference: http://en.wikipedia.org/wiki/Exponential_distribution
+
+Clearly expotentially distributed random variables are not "bell shaped."
+
 ```{r}
 lambda <- 0.2
+numObservations <- 1000
+hist(rexp(numObservations,lambda))
 ```
+
+
+From the Central Limit Theorm we know that as the mean of a sample of expoentially distributed random variable should be normally distributed with the estimated becomming a better approximation of the true population mean as the sample size increase. We will use the following simulation to see if that is true
+
+---
+
 
 **Graph of 1000 random variables selected from a uniform distribution**
 
