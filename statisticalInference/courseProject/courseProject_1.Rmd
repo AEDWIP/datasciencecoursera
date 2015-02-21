@@ -84,6 +84,11 @@ sampleMeanVar <- mean(mvd)
 sampleMeanVar
 ```
 
+---
+
+3. Show that the distribution is approximately normal.
+
+The above graphs clearly show that the mean and variance of a samples of random variable are normally distributed.  Our samples where drawn from a population that was expotentially distributed how ever as the sample sizes increased we can clearly see that the distribution of the sample means and variances becomes more bell shaped and become better approximation of the actual population mean and variance
 
 
 
