@@ -39,20 +39,12 @@ hist(mns, main="Histogram of mean of 1000 samples of rexp(10)")
 
 ---
 
-**Graph of 1000 random variables selected from a uniform distribution**
-
-```{r}
-hist(runif(1000))
-```
-
-**Graph the mean of 1000 samples**
-
-each sample is comprised of 40 uniformaly distributed iid random. The means apear to be normally distributed
+Lets draw another 1000 samples this time lets increase the sample size to 40. Notice how as the sample sized increased the 'bell shape' seems more balanced. I.E the center of mass is more evenly distributed around 1.0
 
 ```{r}
 mns = NULL
-for (i in 1 : 1000) mns = c(mns, mean(runif(40)))
-hist(mns)
+for (i in 1 : 1000) mns = c(mns, mean(rexp(40)))
+hist(mns, main="Histogram of mean of 1000 samples of rexp(40)")
 ```
 ---
 
