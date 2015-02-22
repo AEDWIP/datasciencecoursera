@@ -29,6 +29,17 @@ nrow(na.omit(ToothGrowth) )
 
 ```
 
+The following graph suggest their is not much difference in tooth growth based on treatment
+
+```{r}
+library(ggplot2)
+vc <- ToothGrowth$len[ToothGrowth$supp == "VC"]
+oj <- ToothGrowth$len[ToothGrowth$supp == "OJ"]
+x <- 1:length(vc)
+plotData <- data.frame(oj, vc, x)
+pp <- ggplot(plotData, aes(x, title="len by treatment")) 
+pp + geom_line(aes(y=oj, colour="oj")) + geom_line(aes(y=vc, colour="vc"))
+```
 ---
 
 ### 2. Provide a basic summary of the data.
