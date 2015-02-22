@@ -6,16 +6,21 @@ output: html_document
 ---
 
 My R Markdown file borrows heavily from 
-https://github.com/bcaffo/courses/blob/master/06_StatisticalInference/07_Asymp
-
+https://github.com/bcaffo/courses/blob/master/06_StatisticalInference/03_01_TwoGroupIntervals
 
 ---
 
 1. Load the ToothGrowth data and perform some basic exploratory data analyses 
 
-In RStudio run help(ToothGrowth) to see a description of the data set
+In RStudio run help(ToothGrowth) to see a description of the data set.
+
+Description
+
+The response is the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods (orange juice or ascorbic acid).
 
 ```{r}
+str(ToothGrowth)
+
 head(ToothGrowth)
 
 nrow(ToothGrowth)
@@ -31,6 +36,31 @@ nrow(na.omit(ToothGrowth) )
 ```{r}
 summary(ToothGrowth)
 
+```
+---
+
+3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+
+First create 6 list, one for each combination of treament and dose
+```{r}
+vc05 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 0.5]
+vc1 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 1.0]
+vc2 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 2.0]
+
+oj05 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 0.5]
+oj1 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 1.0]
+oj2 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 2.0]
+
+```
+
+
+---
+AEDWip
+There are six data groupings, OJ or VC by does. Calculate the mean of each group
+```{r}
+attach(ToothGrowth)
+ag <- aggregate(ToothGrowth, by=list(supp,dose), FUN=mean)
+ag
 ```
 ---
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
