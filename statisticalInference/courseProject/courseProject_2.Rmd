@@ -10,7 +10,7 @@ https://github.com/bcaffo/courses/blob/master/06_StatisticalInference/03_01_TwoG
 
 ---
 
-1. Load the ToothGrowth data and perform some basic exploratory data analyses 
+### 1. Load the ToothGrowth data and perform some basic exploratory data analyses 
 
 In RStudio run help(ToothGrowth) to see a description of the data set.
 
@@ -31,7 +31,7 @@ nrow(na.omit(ToothGrowth) )
 
 ---
 
-2. Provide a basic summary of the data.
+### 2. Provide a basic summary of the data.
 
 ```{r}
 summary(ToothGrowth)
@@ -39,7 +39,7 @@ summary(ToothGrowth)
 ```
 ---
 
-3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+### 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. 
 
 We'll use "Two Group intervals Statistical Inference"
 
@@ -72,7 +72,8 @@ mean(vc2) - mean(oj2)
 t.test(vc2, oj2, paired = FALSE, var.equal = TRUE)$conf
 ```
 
-Lets see if we just compare difference between treaments and ignore the dose
+
+Lets see if we find a differece between treaments when we ignore the dose
 
 ```{r}
 vc <- ToothGrowth$len[ToothGrowth$supp == "VC"]
@@ -82,7 +83,11 @@ mean(vc) - mean(oj)
 t.test(vc, oj, paired = FALSE, var.equal = TRUE)$conf
 ```
 
-### Summary
+---
+
+### 4. State your conclusions and the assumptions needed for your conclusions. 
 
 regardless of the size of the dose guinea pigs recevied, there does not appear to be a statistically signifigant difference in the amount of tooth growth.
+
+The only assumption I made was groups where independent so that we could not use a paired t test
 
