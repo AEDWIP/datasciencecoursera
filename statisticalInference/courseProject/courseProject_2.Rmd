@@ -41,6 +41,8 @@ summary(ToothGrowth)
 
 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
 
+We'll use "Two Group intervals Statistical Inference"
+
 First create 6 list, one for each combination of treament and dose
 ```{r}
 vc05 <- ToothGrowth$len[ToothGrowth$supp == "VC" & ToothGrowth$dose == 0.5]
@@ -53,28 +55,34 @@ oj2 <- ToothGrowth$len[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 2.0]
 
 ```
 
-
----
-AEDWip
-There are six data groupings, OJ or VC by does. Calculate the mean of each group
-```{r}
-attach(ToothGrowth)
-ag <- aggregate(ToothGrowth, by=list(supp,dose), FUN=mean)
-ag
-```
----
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Now for each does we'll compare the VC vs OJ
 
 ```{r}
-summary(cars)
+mean(vc05) - mean(oj05)
+t.test(vc05, oj05, paired = FALSE, var.equal = TRUE)$conf
 ```
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+mean(vc1) - mean(oj1)
+t.test(vc1, oj1, paired = FALSE, var.equal = TRUE)$conf
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+mean(vc2) - mean(oj2)
+t.test(vc2, oj2, paired = FALSE, var.equal = TRUE)$conf
+```
+
+Lets see if we just compare difference between treaments and ignore the dose
+
+```{r}
+vc <- ToothGrowth$len[ToothGrowth$supp == "VC"]
+oj <- ToothGrowth$len[ToothGrowth$supp == "OJ"]
+
+mean(vc) - mean(oj)
+t.test(vc, oj, paired = FALSE, var.equal = TRUE)$conf
+```
+
+### Summary
+
+regardless of the size of the dose guinea pigs recevied, there does not appear to be a statistically signifigant difference in the amount of tooth growth.
+
