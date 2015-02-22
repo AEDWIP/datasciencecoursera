@@ -13,6 +13,21 @@ https://github.com/bcaffo/courses/blob/master/06_StatisticalInference/07_Asymp
 
 1. Load the ToothGrowth data and perform some basic exploratory data analyses 
 
+In RStudio run help(ToothGrowth) to see a description of the data set
+
+```{r}
+head(ToothGrowth)
+
+nrow(ToothGrowth)
+nrow(na.omit(ToothGrowth) )
+
+
+```
+
+---
+
+2. Provide a basic summary of the data.
+
 ```{r}
 summary(ToothGrowth)
 
