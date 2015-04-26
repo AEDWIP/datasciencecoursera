@@ -24,3 +24,14 @@ t.test(vc1, oj1, paried=FALSE, var.equal=TRUE)
 m2 <- mean(vc2) - mean(oj2)
 m2
 t.test(vc2, oj2, paried=FALSE, var.equal=TRUE)
+
+
+# T test always says ' alternative hypothesis: true difference in means is not equal to 0' 
+# even when interval contains zero
+
+x <- rnorm(15)
+y <- rnorm(15)
+t.test(x,y, paried=FALSE, var.equal=TRUE)
+
+x10 <- x * 10;
+t.test(x10,y, paried=FALSE, var.equal=TRUE)
