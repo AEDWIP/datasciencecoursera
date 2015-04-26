@@ -2,7 +2,7 @@
 title: "Statistical Inference Course Project"
 author: "Andrew E. Davidson"
 date: "February 22, 2015"
-output: html_document
+output: pdf_document
 ---
 
 My R Markdown file borrows heavily from 
