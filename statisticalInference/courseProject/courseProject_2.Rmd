@@ -2,7 +2,7 @@
 title: "Statistical Inference Course Project"
 author: "Andrew E. Davidson"
 date: "February 22, 2015"
-output: pdf_document
+output: html_document
 ---
 
 My R Markdown file borrows heavily from 
@@ -98,7 +98,8 @@ t.test(vc, oj, paired = FALSE, var.equal = TRUE)$conf
 
 ### 4. State your conclusions and the assumptions needed for your conclusions. 
 
-regardless of the size of the dose guinea pigs recevied, there does not appear to be a statistically signifigant difference in the amount of tooth growth.
+regardless of the size of the dose guinea pigs recevied, there does not appear to be a statistically signifigant difference in the amount of tooth growth. The value of the 
+difference between the means was always with in our confidence interval
 
 The only assumption I made was groups where independent so that we could not use a paired t test
 

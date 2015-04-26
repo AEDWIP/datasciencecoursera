@@ -31,7 +31,7 @@ t.test(vc2, oj2, paried=FALSE, var.equal=TRUE)
 
 x <- rnorm(15)
 y <- rnorm(15)
-t.test(x,y, paried=FALSE, var.equal=TRUE)
+t.test(x,y, paried=?, var.equal=TRUE)
 
 x10 <- x * 10;
-t.test(x10,y, paried=FALSE, var.equal=TRUE)
+tt<- t.test(x10,y, paried=FALSE, var.equal=TRUE)
