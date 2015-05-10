@@ -1,5 +1,5 @@
 #
-# if data is centered data rho == slope
+# if data is centered and scalled then rho == slope
 #
 
 x <- c(1:10)
