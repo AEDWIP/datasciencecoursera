@@ -21,6 +21,11 @@ y <- x * w # weighted sum
 # https://class.coursera.org/regmods-014/lecture/177
 # question ask us for regresion through the origin. I.E. force line through origin
 # beta0 = 0. In general bad idea, good for explain things
+# what we are suppose t calculate
+# 1) do not move the data points
+# 2) fit best line through points and origin. This is a very poor regresion
+# i.e. htink of a line through the origin. rotate it around the origin till you find the
+# slope of the line with the best fit
 #
 x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
 y <- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)
