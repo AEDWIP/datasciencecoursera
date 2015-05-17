@@ -36,6 +36,7 @@ x <- mtcars$wt
 fit <- lm(y ~ x)
 resd <- summary(fit)$sigma # residual error standard devation
 newX <- mean(x)
+# interval=("confidence") is interval around the regression line
 newY <- predict(fit, newdata = data.frame(x=newX), interval=("confidence"))
 newY
 #> newY
@@ -68,7 +69,22 @@ newYValue = newY[1]
 # Construct a 95% prediction interval for its mpg. What is the upper endpoint?
 #
 newX <- 3
-newY <- predict(fit, newdata = data.frame(x=newX), interval=("confidence"))
+# interval=("prediction") is the confidce interval around the predicted value of y
+newY <- predict(fit, newdata = data.frame(x=newX), interval=("prediction"))
 newY
 newY[3]
-#[1] 22.37899
+#[1] 27.57355
+
+#
+# q6
+# Consider again the mtcars data set and a linear regression model with mpg as
+# predicted by weight (in 1,000 lbs). A “short” ton is defined as 2,000 lbs. 
+# Construct a 95% confidence interval for the expected change in mpg per 1 
+# short ton increase in weight. Give the lower endpoint.
+#
+# This is similar question 3, difference is we are creating a confidence
+# interval for slope
+#
+y <- mtcars$mpg
+x <- mtcars$wt / 2
+fit <- lm(y ~ x)
