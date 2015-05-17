@@ -50,3 +50,12 @@ newYValue = newY[1]
 # newY - 18.991
 # newY + c(-1,1) *  1.099625
 # answer = 18.99100
+
+#
+# q4
+# Refer to the previous question. Read the help file for mtcars. What is the
+# weight coefficient interpreted as?
+#
+# ?mtcars
+# [, 6]  wt	Weight (lb/1000)
+# The estimated expected change in mpg per 1,000 lb increase in weight.
