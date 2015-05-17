@@ -123,3 +123,18 @@ coef(fit)[2]
 #
 
 # The new intercept would be β^0−cβ^1
+
+#
+# q9
+# Refer back to the mtcars data set with mpg as an outcome and weight (wt) 
+# as the predictor. About what is the ratio of the the sum of the squared 
+# errors, ∑ni=1(Yi−Y^i)2 when comparing a model with just an intercept 
+# (denominator) to the model with the intercept and slope (numerator)?
+#
+y <- mtcars$mpg
+x <- mtcars$wt 
+fit <- lm(y ~ x)
+numerator <- mean(y)
+denominator <-sum(resid(fit)^2)
+numerator / denominator
+# [1] 0.07218484
