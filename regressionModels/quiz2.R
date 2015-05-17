@@ -88,3 +88,28 @@ newY[3]
 y <- mtcars$mpg
 x <- mtcars$wt / 2
 fit <- lm(y ~ x)
+sc <- summary(fit)$coefficients
+standardError <- sc[2,2] # of slope
+#t <- sc[2,3]
+t <-  qt(1-alpha/2, df=fit$df)
+beta1 <- coef(fit)[2]
+alpha = 0.05
+ci <- beta1 + c(-1,1) * t * standardError
+ci
+# [1] -12.97262 
+
+#
+# q7
+# If my X from a linear regression is measured in centimeters and I convert it 
+# to meters what would happen to the slope coefficient?
+#
+
+x <-c(1,2,3,4,5)
+y <- x
+fit <- lm(y ~ x)
+coef(fit)[2]
+# slope is 1
+x <- x / 100
+fit <- lm(y ~ x)
+coef(fit)[2]
+# slope is 100
