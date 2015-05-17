@@ -138,3 +138,9 @@ numerator <- mean(y)
 denominator <-sum(resid(fit)^2)
 numerator / denominator
 # [1] 0.07218484
+
+#
+# q 10
+# Do the residuals always have to sum to 0 in linear regression?
+#
+# If an intercept is included, then they will sum to 0.
