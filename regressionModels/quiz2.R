@@ -113,3 +113,13 @@ x <- x / 100
 fit <- lm(y ~ x)
 coef(fit)[2]
 # slope is 100
+
+#
+# q8
+# I have an outcome, Y, and a predictor, X and fit a linear regression model 
+# with Y=β0+β1X+ϵ to obtain β^0 and β^1. What would be the consequence to the 
+# subsequent slope and intercept if I were to refit the model with a new 
+# regressor, X+c for some constant, c?
+#
+
+# The new intercept would be β^0−cβ^1
