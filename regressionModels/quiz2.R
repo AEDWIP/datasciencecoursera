@@ -59,3 +59,16 @@ newYValue = newY[1]
 # ?mtcars
 # [, 6]  wt	Weight (lb/1000)
 # The estimated expected change in mpg per 1,000 lb increase in weight.
+
+
+#
+# q5
+# Consider again the mtcars data set and a linear regression model with mpg as 
+# predicted by weight (1,000 lbs). A new car is coming weighing 3000 pounds. 
+# Construct a 95% prediction interval for its mpg. What is the upper endpoint?
+#
+newX <- 3
+newY <- predict(fit, newdata = data.frame(x=newX), interval=("confidence"))
+newY
+newY[3]
+#[1] 22.37899
