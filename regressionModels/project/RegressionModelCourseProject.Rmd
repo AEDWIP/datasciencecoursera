@@ -11,15 +11,14 @@ browser to convert it into HTML. This makes the report take up much more space
 
 # Explore the mtcars data set
 Probably the most useful thing to do is read the data set description. Using
-? mtcars. The data set contains 11 variables, including such as engine size, 
-number of gears, ... We'll need to adjust our models to account for these variable.
+? mtcars we see the data set contains 11 variables, including such as engine size, number of gears, ... We'll need to adjust our models to account for these variable.
 
 Lets take a look at some of the raw sample data
 ```{r echo=FALSE}
 head(mtcars)
 ```
 
-Using scatter plots we can identify variables that might be good predictors of miles per gallon. We are looking for variables that seem to have strong linear tendency. For example displayment. We are also looking for variables that might be confounding. For example we would expect the more gears a car has the better the miles per gallon would be. Just looking st the scatter plot, It looks like cars with 4 gears might do better than cars with either 3 or 5 gears suggesting that something else is going on. The confounding effect may have todo with how the test was run. Did the take the care out on track and run at a high speed for long time? If so we would expect cars with 5 gears to consistently outperform the others holding things like weight, engine size, ... constant
+Using scatter plots we can identify variables that might be good predictors of miles per gallon. We are looking for variables that seem to have strong linear tendency. For example displayment. We are also looking for variables that might be confounding. For example we would expect the more gears a car has the better the miles per gallon would be. Just looking st the scatter plot, It looks like cars with 4 gears might do better than cars with either 3 or 5 gears suggesting that something else is going on. The confounding effect may have to do with how the test was run. Did the take the care out on track and run at a high speed for long time? If so we would expect cars with 5 gears to consistently outperform the others holding things like weight, engine size, ... constant
 
 
 
@@ -53,21 +52,30 @@ print(wtPlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 3))
 print(amPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
 print(gearPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 print(carbPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 3))
+```
 
+# Is an automatic or manual transmission better for MPG?
+To solve this problem, we need to create a linear model that predicts MPG. We can notsimply using the factor variable am, (automatic or manual transmision) as apredictor. We'll need to adjust for other factors suche as weight, number of gears,engine size, ... To keep things simple we will assume there are no interaction between variables. That is to say our model does not have predictors variable of the form wt * disp.
+
+First we need to decide what variables to use in our model. If we create a 
+linear model using all the variable and look at the col Pr(>|t|) the best predictor seems to be vehicle weight. the Pr() value is still lower than we would normally like. The Estimate for wt is -3.7, which means for every 1000 lbs increase in vehicle weight we would expect MPG to decrese by 3.7. (Assuming we did not change any of the other variables like engine size, transmission, ...)
+
+Whats interesting is if we look at the unadjust model. That is to say the model with a single predictor variable of weight, the are t value is signifigant! The size of the effect is also much stronger.
+
+The intecept row represents the mpg variable. We can think of the intercep as the expected MPG when all of the perdictors are zero. This is not particully meaningful. What does it mean to have a car with an engine displayment equal to zero.
+
+The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, carb, drat, and disp reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
+```{r}
+summary(lm(mpg ~ ., data=mtcars))$coefficients
+
+summary(lm(mpg ~ wt, data=mtcars))$coefficients
+
+summary(lm(mpg ~ wt + cyl + am, data=mtcars))$coefficients
 
 ```
 
-A couple of scatter plots will help us quickly identify which variables are most
-likely to impact miles per gallon
-
-# Is an automatic or manual transmission better for MPG?
-Do solve this problem, we need to create a model that predicts MPG. We can not
-simply using the factor variable am, automatic or manual transmision) as a
-predictor. We'll need to adjust for other factors suche as weight, number of gears,
-engine size, ...
-
+# cut-n-paste save
 ```{r}
-library(ggplot2)
 fit <- lm(mtcars$mpg ~ mtcars$am)
 coef(fit)
 
