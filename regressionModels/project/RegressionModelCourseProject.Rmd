@@ -2,8 +2,80 @@
 title: "RegressionModelCourseProject"
 author: "Andrew E. Davidson"
 date: "May 23, 2015"
-output: pdf_document
+output: html_document
 ---
+### I ran into problems running Knit PDF in R Studio
+Unfortunatly my report is not formated as nicely as I might like. Knit did
+not work on my Mac. As a work around set the Knit format to html and used my
+browser to convert it into HTML. This makes the report take up much more space
+
+# Explore the mtcars data set
+Probably the most useful thing to do is read the data set description. Using
+? mtcars. The data set contains 11 variables, including such as engine size, 
+number of gears, ... We'll need to adjust our models to account for these variable.
+
+Lets take a look at some of the raw sample data
+```{r echo=FALSE}
+head(mtcars)
+```
+
+Using scatter plots we can identify variables that might be good predictors of miles per gallon. We are looking for variables that seem to have strong linear tendency. For example displayment. We are also looking for variables that might be confounding. For example we would expect the more gears a car has the better the miles per gallon would be. Just looking st the scatter plot, It looks like cars with 4 gears might do better than cars with either 3 or 5 gears suggesting that something else is going on. The confounding effect may have todo with how the test was run. Did the take the care out on track and run at a high speed for long time? If so we would expect cars with 5 gears to consistently outperform the others holding things like weight, engine size, ... constant
+
+
+
+```{r echo=FALSE}
+library(ggplot2)
+cylPlot <- ggplot(mtcars, aes(y=mpg, x=cyl))
+cylPlot <- cylPlot + geom_point(color="firebrick")
+
+dispPlot <- ggplot(mtcars, aes(y=mpg, x=disp))
+dispPlot <- dispPlot + geom_point(color="salmon")
+
+wtPlot <- ggplot(mtcars, aes(y=mpg, x=wt))
+wtPlot <- wtPlot + geom_point(color="olivedrab")
+
+amPlot <- ggplot(mtcars, aes(y=mpg, x=am))
+amPlot <- amPlot + geom_point(color="yellow")
+
+gearPlot <- ggplot(mtcars, aes(y=mpg, x=gear))
+gearPlot <- gearPlot + geom_point(color="skyblue")
+
+carbPlot <- ggplot(mtcars, aes(y=mpg, x=carb))
+carbPlot <- carbPlot + geom_point(color="black")
+
+library(grid)
+
+pushViewport(viewport(layout = grid.layout(2, 3)))
+print(cylPlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+print(dispPlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+print(wtPlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 3))
+
+print(amPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+print(gearPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
+print(carbPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 3))
+
+
+```
+
+A couple of scatter plots will help us quickly identify which variables are most
+likely to impact miles per gallon
+
+# Is an automatic or manual transmission better for MPG?
+Do solve this problem, we need to create a model that predicts MPG. We can not
+simply using the factor variable am, automatic or manual transmision) as a
+predictor. We'll need to adjust for other factors suche as weight, number of gears,
+engine size, ...
+
+```{r}
+library(ggplot2)
+fit <- lm(mtcars$mpg ~ mtcars$am)
+coef(fit)
+
+g <- ggplot(mtcars, aes(x=am, y=mpg))
+g <- g + geom_smooth(method="lm", formula=y~x)
+g
+```
+# original template bellow
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
