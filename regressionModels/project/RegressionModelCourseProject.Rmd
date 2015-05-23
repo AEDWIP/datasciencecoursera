@@ -70,19 +70,20 @@ print(carbPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 3))
 To solve this problem, we need to create a linear model that predicts MPG. We can notsimply using the factor variable am, (automatic or manual transmision) as apredictor. We'll need to adjust for other factors suche as weight, number of gears,engine size, ... To keep things simple we will assume there are no interaction between variables. That is to say our model does not have predictors variable of the form wt * disp.
 
 First we need to decide what variables to use in our model. If we create a 
-linear model using all the variable and look at the col Pr(>|t|) the best predictor seems to be vehicle weight. the Pr() value is still lower than we would normally like. The Estimate for wt is -3.7, which means for every 1000 lbs increase in vehicle weight we would expect MPG to decrese by 3.7. (Assuming we did not change any of the other variables like engine size, transmission, ...)
+linear model using all the variable and look at the col Pr(>|t|) we do not find
+a beta that appears to be signifigant. The best predictor seems to be vehicle weight. the Pr() value is still lower than we would normally like. The Estimate for wt is -4.3, which means for every 1000 lbs increase in vehicle weight we would expect MPG to decrese by 4.3. (Assuming we did not change any of the other variables like engine size, transmission, ...)
 
 Whats interesting is if we look at the unadjust model. That is to say the model with a single predictor variable of weight, the are t value is signifigant! The size of the effect is also much stronger.
 
 The intecept row represents the mpg variable. We can think of the intercep as the expected MPG when all of the perdictors are zero. This is not particully meaningful. What does it mean to have a car with an engine displayment equal to zero.
 
-The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, carb, drat, and disp reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
+The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, drat, and disp reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
 ```{r}
 summary(lm(mpg ~ ., data=mtcars))$coefficients
 
 summary(lm(mpg ~ wt, data=mtcars))$coefficients
 
-model <- lm(mpg ~ wt + cyl + am, data=mtcars)
+model <- lm(mpg ~ am + wt + cyl + carb, data=mtcars)
 summary(model)$coefficients
 ```
 
@@ -99,3 +100,5 @@ g
 ```
 
 ## Adjusting the model to 
+
+
