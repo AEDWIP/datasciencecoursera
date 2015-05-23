@@ -13,6 +13,18 @@ browser to convert it into HTML. This makes the report take up much more space
 Probably the most useful thing to do is read the data set description. Using
 ? mtcars we see the data set contains 11 variables, including such as engine size, number of gears, ... We'll need to adjust our models to account for these variable.
 
+### set up factors 
+Using str it turns out cyl, gear, am, and carb are numeric, not factors. We'll
+need to convert them
+```{r}
+str(mtcars)
+
+mtcars$am <- factor(mtcars$am)
+mtcars$cyl <- factor(mtcars$cyl)
+mtcars$gear <- factor(mtcars$gear)
+mtcars$carb <- factor(mtcars$carb)
+```
+
 Lets take a look at some of the raw sample data
 ```{r echo=FALSE}
 head(mtcars)
@@ -85,3 +97,5 @@ g <- ggplot(data=df, aes(y=mpg, x=residual))
 g <- g + geom_point(size=5, colour="blue")
 g
 ```
+
+## Adjusting the model to 
