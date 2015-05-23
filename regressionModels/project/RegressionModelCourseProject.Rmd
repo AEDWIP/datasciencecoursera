@@ -70,33 +70,18 @@ summary(lm(mpg ~ ., data=mtcars))$coefficients
 
 summary(lm(mpg ~ wt, data=mtcars))$coefficients
 
-summary(lm(mpg ~ wt + cyl + am, data=mtcars))$coefficients
-
+model <- lm(mpg ~ wt + cyl + am, data=mtcars)
+summary(model)$coefficients
 ```
 
-# cut-n-paste save
+## Graph of Residuals
+If our model is good, we would expect our residual point graph to appear random.
+That is to say we should not find any sort of pattern. (Our model looks good)
 ```{r}
-fit <- lm(mtcars$mpg ~ mtcars$am)
-coef(fit)
-
-g <- ggplot(mtcars, aes(x=am, y=mpg))
-g <- g + geom_smooth(method="lm", formula=y~x)
+r <- resid(model)
+df <- data.frame(mtcars$mpg, r)
+colnames(df) <- c("mpg", "residual")
+g <- ggplot(data=df, aes(y=mpg, x=residual))
+g <- g + geom_point(size=5, colour="blue")
 g
 ```
-# original template bellow
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
-```
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
