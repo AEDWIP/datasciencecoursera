@@ -78,6 +78,10 @@ Whats interesting is if we look at the unadjust model. That is to say the model 
 The intecept row represents the mpg variable. We can think of the intercep as the expected MPG when all of the perdictors are zero. This is not particully meaningful. What does it mean to have a car with an engine displayment equal to zero.
 
 The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, drat, and disp reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
+
+Given am has the lowest level of the covarients in our model, R will automatically
+select it as the reference variable.
+
 ```{r}
 summary(lm(mpg ~ ., data=mtcars))$coefficients
 
@@ -86,6 +90,10 @@ summary(lm(mpg ~ wt, data=mtcars))$coefficients
 model <- lm(mpg ~ am + wt + cyl + carb, data=mtcars)
 summary(model)$coefficients
 ```
+
+## Conclusion
+The expect MPG for cars with automatic transmission is 30.89. Having a manual 
+transmision increases the MPG by 1.87.
 
 ## Graph of Residuals
 If our model is good, we would expect our residual point graph to appear random.
@@ -99,6 +107,5 @@ g <- g + geom_point(size=5, colour="blue")
 g
 ```
 
-## Adjusting the model to 
 
 
