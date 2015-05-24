@@ -83,18 +83,37 @@ Whats interesting is if we look at the unadjust model. That is to say the model 
 summary(lm(mpg ~ wt, data=mtcars))$coefficients
 ```
 
-The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, drat, and disp did not reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
+The next step to try a couple of different models. We will use the 
+"nested model search approach to evaluate different models". I did not consider
+'vs' becuase I did not know what 'V/S' ment. I also did not consider qsec.
 
-Becuase am is our factor variable with the lowest level of the coveraients in our model, R will automatically select it as the reference variable. That is to say the 
-expected value in mpg for cars with automatic transmissions. 
 ```{r}
-model <- lm(mpg ~ am + wt + cyl + carb, data=mtcars)
+f1 <- lm(mpg ~ am, data=mtcars)
+f2 <- update(f1, mpg ~ am + cyl, data=mtcars)
+f3 <- update(f2, mpg ~ am + cyl + disp, data=mtcars)
+f4 <- update(f3, mpg ~ am + cyl + disp + hp, data=mtcars)
+f5 <- update(f4, mpg ~ am + cyl + disp + hp + drat, data=mtcars)
+f6 <- update(f5, mpg ~ am + cyl + disp + hp + drat + wt, data=mtcars)
+f7 <- update(f6, mpg ~ am + cyl + disp + hp + drat + wt + gear, data=mtcars)
+f8 <- update(f7, mpg ~ am + cyl + disp + hp + drat + wt + gear + carb, data=mtcars)
+
+anova(f1, f2, f3, f4, f5, f6, f7, f8)
+```
+
+Based on the Pr(>F) values in the anova results the variables we should use as predictors are am, cyl, disp, hp, and wt. The Pr(>F) value for wt was actually 0.052. My
+intutition tells me weight is an important variable. One thing to keep in mind is 
+the unit for wt is 1000 LBS. If weight was represented in actual pounds, it
+would definietly be signifigant
+
+Becuase am is the factor variable with the lowest level of the coveraients in our model, R will automatically select it as the reference variable. That is to say the expected value in mpg for cars with automatic transmissions
+```{r}
+model <- lm(mpg ~ am + cyl + disp + hp + wt, data=mtcars)
 summary(model)$coefficients
 ```
 
 ## Conclusion
-The expect MPG for cars with automatic transmission is 30.89. Having a manual 
-transmision increases the MPG by 1.87.
+The expect MPG for cars with automatic transmission is 33.9. Having a manual 
+transmision increases the MPG by 1.8 MPG.
 
 ## Graph of Residuals
 If our model is good, we would expect our residual point graph to appear random.
