@@ -6,8 +6,8 @@ output: html_document
 ---
 ### I ran into problems running Knit PDF in R Studio
 Unfortunatly my report is not formated as nicely as I might like. Knit did
-not work on my Mac. As a work around set the Knit format to html and used my
-browser to convert it into HTML. This makes the report take up much more space
+not work on my Mac. As a work around I set the Knit format to html and used my
+browser to convert it into PDF. This makes the report take up much more space
 
 # Explore the mtcars data set
 Probably the most useful thing to do is read the data set description. Using
@@ -73,20 +73,21 @@ First we need to decide what variables to use in our model. If we create a
 linear model using all the variable and look at the col Pr(>|t|) we do not find
 a beta that appears to be signifigant. The best predictor seems to be vehicle weight. the Pr() value is still lower than we would normally like. The Estimate for wt is -4.3, which means for every 1000 lbs increase in vehicle weight we would expect MPG to decrese by 4.3. (Assuming we did not change any of the other variables like engine size, transmission, ...)
 
-Whats interesting is if we look at the unadjust model. That is to say the model with a single predictor variable of weight, the are t value is signifigant! The size of the effect is also much stronger.
-
-The intecept row represents the mpg variable. We can think of the intercep as the expected MPG when all of the perdictors are zero. This is not particully meaningful. What does it mean to have a car with an engine displayment equal to zero.
-
-The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, drat, and disp reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
-
-Given am has the lowest level of the covarients in our model, R will automatically
-select it as the reference variable.
-
 ```{r}
 summary(lm(mpg ~ ., data=mtcars))$coefficients
+```
 
+Whats interesting is if we look at the unadjust model. That is to say the model with a single predictor variable of weight, the are t value is signifigant! The size of the effect is also much stronger.
+
+```{r}
 summary(lm(mpg ~ wt, data=mtcars))$coefficients
+```
 
+The next step to try a couple of different models. That is to say choose different covariants and see if we can improve the t values. I got the most signifigant results with predictors of wt and cyl. Adding gear, drat, and disp did not reduced signifigance so in the interested of having the simplest possible model I did not include them in my final model
+
+Becuase am is our factor variable with the lowest level of the coveraients in our model, R will automatically select it as the reference variable. That is to say the 
+expected value in mpg for cars with automatic transmissions. 
+```{r}
 model <- lm(mpg ~ am + wt + cyl + carb, data=mtcars)
 summary(model)$coefficients
 ```
