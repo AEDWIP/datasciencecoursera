@@ -49,3 +49,24 @@ cWith8 - ccWithout8
 
 best answer
 "Holding weight constant, cylinder appears to have more of an impact on mpg than if weight is disregarded."
+
+
+## question 3
+Consider the mtcars data set. Fit a model with mpg as the outcome that considers number of cylinders as a factor variable and weight as confounder. 
+
+Now fit a second model with mpg as the outcome model that considers the interaction between number of cylinders (as a factor variable) and weight. 
+
+Give the P-value for the likelihood ratio test comparing the two models and suggest a model using 0.05 as a type I error rate significance benchmark.
+
+see See the end of lecture 02_05
+
+```{r}
+fit2 <- lm(mpg ~ cyl + wt, data=mtcars)
+fit3 <- update(fit2, mpg ~ cyl * wt)
+anova(fit2, fit3)
+```
+
+
+answer
+
+"The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary."
