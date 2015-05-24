@@ -1,0 +1,28 @@
+---
+title: "quiz 3"
+author: "Andrew E. Davidson"
+date: "May 24, 2015"
+output: html_document
+---
+
+##Question 1
+Consider the mtcars data set. Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight as confounder. Give the adjusted estimate for the expected change in mpg comparing 8 cylinders to 4.
+
+Using str it turns out cyl, gear, am, and carb are numeric, not factors. We'll
+need to convert them
+```{r}
+str(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+```
+
+cyl levels are 4, 6, and 8. by default R will set the refference varriable 
+(ie intercept) to the lowest level. intercept will be 4 cylinders
+```{r}
+summary(lm(mpg ~ cyl + wt, data=mtcars))$coefficients
+c <- summary(lm(mpg ~ cyl, data=mtcars))$coefficients
+cyl4 <- c[1]
+cyl6 <- c[2]
+cyl8 <- c[3]
+#cyl4 - cyl8
+```
+answer is cyl8 == -6.0
