@@ -1,5 +1,5 @@
 ---
-title: "RegressionModelCourseProject"
+title: "Regression Models Course Project"
 author: "Andrew E. Davidson"
 date: "May 23, 2015"
 output: html_document
