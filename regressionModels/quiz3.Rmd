@@ -29,27 +29,32 @@ answer is cyl8 == -6.0
 
 
 ## question 2
-Consider the mtcars data set. Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight as a possible confounding variable. Compare the effect of 8 versus 4 cylinders on mpg for the adjusted and unadjusted by weight models. Here, adjusted means including the weight variable as a term in the regression model and unadjusted means the model without weight included. What can be said about the effect comparing 8 and 4 cylinders after looking at models with and without weight included?.
+Consider the mtcars data set. Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight as a possible confounding variable. 
+
+Compare the effect of 8 versus 4 cylinders on mpg for the adjusted and unadjusted by weight models. Here, adjusted means including the weight variable as a term in the regression model and unadjusted means the model without weight included. What can be said about the effect comparing 8 and 4 cylinders after looking at models with and without weight included?.
 
 ```{r}
-cWithWt <- summary(lm(mpg ~ cyl + wt, data=mtcars))$coefficients
-cWithWt
-cWith8 <- cWithWt[3]
-cWithOut <- summary(lm(mpg ~ cyl, data=mtcars))$coefficients
-cWithOut
-ccWithout8 <- cWithOut[3]
-
-cWith8
-ccWithout8
-
-cWith8 - ccWithout8
+summary(lm(mpg ~ cyl + wt, data=mtcars))$coefficients
+summary(lm(mpg ~ cyl, data=mtcars))$coefficients
 ```
-'holding wt constant' means model with out wt
+I think 'holding wt constant' means model with out wt
+
+MPG is higher if we adjust for weight
 
 
-best answer
-"Holding weight constant, cylinder appears to have more of an impact on mpg than if weight is disregarded."
+a) Within a given weight, 8 cylinder vehicles have an expected 12 mpg drop in fuel efficiency.
 
+b) Holding weight constant, cylinder appears to have more of an impact on mpg than if weight is disregarded.
+
+c) Holding weight constant, cylinder appears to have less of an impact on mpg than if weight is disregarded.
+
+d) Including or excluding weight does not appear to change anything regarding the estimated impact of number of cylinders on mpg.
+
+answer
+
+wrong: "Holding weight constant, cylinder appears to have more of an impact on mpg than if weight is disregarded."
+
+Holding weight constant, cylinder appears to have less of an impact on mpg than if weight is disregarded.
 
 ## question 3
 Consider the mtcars data set. Fit a model with mpg as the outcome that considers number of cylinders as a factor variable and weight as confounder. 
@@ -62,14 +67,24 @@ see See the end of lecture 02_05
 
 ```{r}
 fit2 <- lm(mpg ~ cyl + wt, data=mtcars)
-fit3 <- update(fit2, mpg ~ cyl * wt)
+fit3 <- lm(mpg ~ cyl * wt, data=mtcars)
 anova(fit2, fit3)
 ```
 
+a) The P-value is small (less than 0.05). So, according to our criterion, we reject, which suggests that the interaction term is necessary
 
+b) The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms is necessary.
+
+c) The P-value is small (less than 0.05). So, according to our criterion, we reject, which suggests that the interaction term is not necessary.
+
+d) The P-value is small (less than 0.05). Thus it is surely true that there is no interaction term in the true model.
+
+e) The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary.
+
+f) The P-value is small (less than 0.05). Thus it is surely true that there is an interaction term in the true model.
 answer
 
-"The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary."
+wrong: "The P-value is larger than 0.05. So, according to our criterion, we would fail to reject, which suggests that the interaction terms may not be necessary."
 
 ## question 4
 Consider the mtcars data set. Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight inlcuded in the model as
@@ -82,10 +97,25 @@ summary(fit)$coefficients
 
 How is the wt coefficient interpretted?
 
+a) The estimated expected change in MPG per one ton increase in weight for a specific number of cylinders (4, 6, 8).  		
+
+b) The estimated expected change in MPG per half ton increase in weight for for a specific number of cylinders (4, 6, 8).	Inorrect	0.00	
+
+c) The estimated expected change in MPG per one ton increase in weight.			
+
+d) The estimated expected change in MPG per half ton increase in weight for the average number of cylinders.			
+
+
+e) The estimated expected change in MPG per half ton increase in weight.
+
 Answer:
 
-The estimated expected change in MPG per half ton increase in weight for for a specific number of cylinders (4, 6, 8).
+wrong: The estimated expected change in MPG per half ton increase in weight for for a specific number of cylinders (4, 6, 8).
 
+wrong: The estimated expected change in MPG per half ton increase in weight.
+
+correct answer must be (other have 1 ton which is wrong units)
+The estimated expected change in MPG per half ton increase in weight for the average number of cylinders.
 ## question 5
 Consider the following data set
 
@@ -105,3 +135,39 @@ Answer
 0.9946
 
 TODO review lecture 02_04 residuals influence and diagnostics
+
+
+## question 6
+Consider the following data set
+
+```{r}
+x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
+y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+```
+
+Give the slope dfbeta for the point with the highest hat value.
+
+```{r}
+model <- lm(y ~ x)
+influence.measures(model)
+```
+
+Answer:
+
+-134
+
+## question 7
+Consider a regression relationship between Y and X with and without adjustment for a third variable Z. Which of the following is true about comparing the regression coefficient between Y and X with and without adjustment for Z.
+
+a) The coefficient can't change sign after adjustment, except for slight numerical pathological cases.
+
+b) For the the coefficient to change sign, there must be a significant interaction term.
+
+c) Adjusting for another variable can only attenuate the coefficient toward zero. It can't materially change sign.
+
+d) It is possible for the coefficient to reverse sign after adjustment. For example, it can be strongly significant and positive before adjustment and strongly significant and negative after adjustment.
+
+answer:
+
+
+It is possible for the coefficient to reverse sign after adjustment. For example, it can be strongly significant and positive before adjustment and strongly significant and negative after adjustment.
