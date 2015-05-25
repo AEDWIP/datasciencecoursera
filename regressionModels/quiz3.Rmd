@@ -86,3 +86,22 @@ Answer:
 
 The estimated expected change in MPG per half ton increase in weight for for a specific number of cylinders (4, 6, 8).
 
+## question 5
+Consider the following data set
+
+```{r}
+x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
+y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+```
+Give the hat diagonal for the most influential point
+
+```{r}
+model <- lm(y ~ x)
+influence.measures(model)
+```
+
+Answer
+
+0.9946
+
+TODO review lecture 02_04 residuals influence and diagnostics
