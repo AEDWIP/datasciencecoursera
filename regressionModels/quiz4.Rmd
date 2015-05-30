@@ -42,15 +42,32 @@ as.numeric(tt[1:5])
 lr <- glm(use ~ wind, family="binomial", data=shuttle)
 
 #log odds
-lr$coefficients
+round(lr$coefficients,3)
 
 #odds
-exp(lr$coefficients)
+round(exp(lr$coefficients),3)
 
 #Give the estimated odds ratio for autolander use comparing head winds, labeled as "head" in the variable headwind (numerator) to tail winds (denominator) ?
 
 #went with answer for slope (ie windtail) == 0.9687
 #i.e. we want odds not log odds, how ever I think we need to relevel $use
 # if we relevel the answer is not in the list of solutions
-exp(lr$coefficients[2])
+round(exp(lr$coefficients[2]),3)
+```
+
+
+## question 2
+
+Consider the previous problem. Give the estimated odds ratio for autolander use comparing head winds (numerator) to tail winds (denominator) adjusting for wind strength from the variable magn.
+
+```{r}
+lr <- glm(use ~ wind + magn, family="binomial", data=shuttle)
+
+#log odds
+lr$coefficients
+
+#odds
+round(exp(lr$coefficients),3)
+
+# I do not get the exact anwer> choose 0.969
 ```
