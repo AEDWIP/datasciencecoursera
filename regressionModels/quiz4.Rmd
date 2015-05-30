@@ -71,3 +71,34 @@ round(exp(lr$coefficients),3)
 
 # I do not get the exact anwer> choose 0.969
 ```
+
+## question 3
+If you fit a logistic regression model to a binary variable, for example use of the autolander, then fit a logistic regression model for one minus the outcome (not using the autolander) what happens to the coefficients?
+
+The outcome is binary, 0 or 1. One minus the outcome will reverse the 0's and 1: 1-0 = 1 and 1-1=0.
+
+a) The coefficients get inverted (one over their previous value).
+
+b) The coefficients reverse their signs.
+
+c) The coefficients change in a non-linear fashion.
+
+d) The intercept changes sign, but the other coefficients don't.
+
+
+I think the best answer is b. we have an "s curve", the transition from has a
+positive slope and intercept is zero. When we flip, the transition has a neg slope
+and intercept is 1.
+
+```r
+#d <- data.frame(y=c(rep(0,5),rep(1,5)), x=c(rnorm(5, mean=3, sd=0.1), rnorm(5, mean=6, sd=0.1)))
+#lr <- glm(d$y ~ d$x, family="binomial")
+#lr$coeffients
+
+lr <- glm(use ~ wind, family="binomial", data=shuttle)
+lr$coeffients
+
+shuttle$use <- relevel(shuttle$use , ref="noauto")
+lr <- glm(use ~ wind, family="binomial", data=shuttle)
+lr$coeffients
+```
