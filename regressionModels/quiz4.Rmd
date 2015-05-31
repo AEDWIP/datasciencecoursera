@@ -18,6 +18,8 @@ If I understand the question correctly we need to change the shuttle data so tha
 
 going through earlier lecture notes. I think all we need to do is use relevel(). If my notes are correct lm() will create the dummy variables for us and set the intercept to 'no auto'
 
+Note: we need to either relevel both $use and $wind, or do not relevel anything
+
 ### explore shuttle data
 
 ```{r}
@@ -44,7 +46,7 @@ round(exp(lr$coefficients),3)
 round(exp(lr$coefficients[2]),3)
 ```
 
-#### experiment 2: with relevel
+#### experiment 2: with relevel use (wrong answer, need to relevel wind)
 ```{r}
 shuttle$use <- relevel(shuttle$use , ref="noauto")
 lr <- glm(use ~ wind, family="binomial", data=shuttle)
