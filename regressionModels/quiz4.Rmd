@@ -7,7 +7,9 @@ output: html_document
 
 ## question 1
 
-Consider the space shuttle data ?shuttle in the MASS library. Consider modeling the use of the autolander as the outcome (variable name use). Fit a logistic regression model with autolander (variable auto) use (labeled as "auto" 1) versus not (0) as predicted by wind sign (variable wind). Give the estimated odds ratio for autolander use comparing head winds, labeled as "head" in the variable headwind (numerator) to tail winds (denominator).
+Consider the space shuttle data ?shuttle in the MASS library. Consider modeling the use of the autolander as the outcome (variable name use). Fit a logistic regression model with autolander (variable auto) use (labeled as "auto" 1) versus not (0) as predicted by wind sign (variable wind). 
+
+Give the estimated odds ratio for autolander use comparing head winds, labeled as "head" in the variable headwind (numerator) to tail winds (denominator).?
 
 get help on libray MASS
 ?? MASS
@@ -25,40 +27,66 @@ data(shuttle)
 str(shuttle$use)
 levels(shuttle$use)
 unique(as.numeric(shuttle$use))
-
-tt <-shuttle$use
-#yy <- relevel(tt , ref="noauto")
-tt[1:5]
-as.numeric(tt[1:5])
-#yy[1:5]
-#as.numeric(yy[1:5])
-
 ```
 
 ### solution to question 1
+
+#### experiment 1: no relevel, give correct answer 0.969
 ```{r}
-# we do not need to relevel
-#shuttle$use <- relevel(shuttle$use , ref="noauto")
 lr <- glm(use ~ wind, family="binomial", data=shuttle)
 
-#log odds
+# log odds
 round(lr$coefficients,3)
 
-#odds
+# odds
 round(exp(lr$coefficients),3)
 
+round(exp(lr$coefficients[2]),3)
+```
+
+#### experiment 2: with relevel
+```{r}
+shuttle$use <- relevel(shuttle$use , ref="noauto")
+lr <- glm(use ~ wind, family="binomial", data=shuttle)
+
+# log odds
+round(lr$coefficients,3)
+
+# odds
+round(exp(lr$coefficients),3)
+
+round(exp(lr$coefficients[2]),3)
+```
+
+#### experiment 3, replace $use with numeric values, 
+you get the same results as if you use relevel() how ever knit has problem
+```{r}
+
+#rm(shuttle)
+#data(shuttle)
+#shuttle$use <- ifelse(shuttle$use == "auto",1,0)
+#lr <- glm(use ~ wind, family="binomial", data=shuttle)
+
+#log odds
+#round(lr$coefficients,3)
+
+#odds
+#round(exp(lr$coefficients),3)
+
 #Give the estimated odds ratio for autolander use comparing head winds, labeled as "head" in the variable headwind (numerator) to tail winds (denominator) ?
+
 
 #went with answer for slope (ie windtail) == 0.9687
 #i.e. we want odds not log odds, how ever I think we need to relevel $use
 # if we relevel the answer is not in the list of solutions
-round(exp(lr$coefficients[2]),3)
+#round(exp(lr$coefficients[2]),3)
 ```
-
 
 ## question 2
 
 Consider the previous problem. Give the estimated odds ratio for autolander use comparing head winds (numerator) to tail winds (denominator) adjusting for wind strength from the variable magn.
+
+correct answer is 0.969
 
 ```{r}
 lr <- glm(use ~ wind + magn, family="binomial", data=shuttle)
@@ -75,7 +103,7 @@ round(exp(lr$coefficients),3)
 ## question 3
 If you fit a logistic regression model to a binary variable, for example use of the autolander, then fit a logistic regression model for one minus the outcome (not using the autolander) what happens to the coefficients?
 
-The outcome is binary, 0 or 1. One minus the outcome will reverse the 0's and 1: 1-0 = 1 and 1-1=0.
+The outcome is binary, 0 or 1. One minus the outcome will reverse the 0's and 1: 1-0 = 1 and 1-1=0
 
 a) The coefficients get inverted (one over their previous value).
 
@@ -86,19 +114,73 @@ c) The coefficients change in a non-linear fashion.
 d) The intercept changes sign, but the other coefficients don't.
 
 
-I think the best answer is b. we have an "s curve", the transition from has a
+correct answer is b. we have an "s curve", the transition from has a
 positive slope and intercept is zero. When we flip, the transition has a neg slope
 and intercept is 1.
 
-```r
+```{r}
 #d <- data.frame(y=c(rep(0,5),rep(1,5)), x=c(rnorm(5, mean=3, sd=0.1), rnorm(5, mean=6, sd=0.1)))
 #lr <- glm(d$y ~ d$x, family="binomial")
 #lr$coeffients
 
 lr <- glm(use ~ wind, family="binomial", data=shuttle)
-lr$coeffients
+round(lr$coefficients,3)
 
 shuttle$use <- relevel(shuttle$use , ref="noauto")
 lr <- glm(use ~ wind, family="binomial", data=shuttle)
-lr$coeffients
+round(lr$coefficients,3)
+```
+
+
+## question 4
+Consider the insect spray data InsectSprays. Fit a Poisson model using spray as a factor level. Report the estimated relative rate comapring spray A (numerator) to spray B (denominator).
+
+```{r}
+data(InsectSprays)
+head(InsectSprays)
+levels(InsectSprays$spray)
+
+plr <- glm(count ~ spray, family="poisson", data=InsectSprays)
+plr$coefficients
+# our answer ws 0.056, how ever multple choice was -0.056???
+
+# try using logit
+# need to add one, log(count) = -inf for some values
+logit <- lm(I(log(count + 1)) ~ spray, data=InsectSprays)
+coef(logit)
+exp(coef(logit))
+```
+
+
+## question 5
+Consider a Poisson glm with an offset, t. So, for example, a model of the form glm(count ~ x + offset(t), family = poisson) where x is a factor variable comparing a treatment (1) to a control (0) and t is the natural log of a monitoring time. What is impact of the coefficient for x if we fit the model glm(count ~ x + offset(t2), family = poisson) where t2 <- log(10) + t? In other words, what happens to the coefficients if we change the units of the offset variable. (Note, adding log(10) on the log scale is multiplying by 10 on the original scale.)
+
+a) The coefficient estimate is divided by 10.
+
+b) The coefficient is subtracted by log(10).
+
+c) The coefficient estimate is multiplied by 10.
+
+d) The coefficient estimate is unchanged
+
+
+## question 6
+
+```{r}
+x <- -5:5
+y <- c(5.12, 3.93, 2.67, 1.87, 0.52, 0.08, 0.93, 2.05, 2.54, 3.87, 4.97)
+
+# Using a knot point at 0, fit a linear model that looks like a hockey stick with two lines meeting at x=0. Include an intercept term, x and the knot point term. What is the estimated slope of the line after 0?
+
+knots <- 0
+splineTerms <- sapply(knots, function(knot) (x > knot) * (x - knot))
+xMat <- cbind(1, x, splineTerms)
+model <- lm(y ~ xMat - 1) # -1 means remove intercept
+yhat <- predict(model)
+plot(x, y, frame = FALSE, pch = 21, bg = "lightblue", cex = 2)
+lines(x, yhat, col = "red", lwd = 2)
+
+coef(model)
+
+# answser 2.0372
 ```
