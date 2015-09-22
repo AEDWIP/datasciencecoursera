@@ -1,0 +1,24 @@
+---
+title: "Practical Machine Learning Quiz 2"
+author: "Andrew E. Davidson"
+date: "September 22, 2015"
+output: html_document
+---
+
+##Question 1
+Load the Alzheimer's disease data using the commands:
+
+```{r}
+library(AppliedPredictiveModeling)
+library(caret)
+data(AlzheimerDisease)
+```
+Which of the following commands will create training and test sets with about 50% of the observations assigned to each?
+
+```{r}
+adData = data.frame(diagnosis,predictors)
+trainIndex = createDataPartition(diagnosis, p = 0.50,list=FALSE)
+training = adData[trainIndex,]
+testing = adData[-trainIndex,]
+length(diagnosis); dim(training); dim(testing)
+```
