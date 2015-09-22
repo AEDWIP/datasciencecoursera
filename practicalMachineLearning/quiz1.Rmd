@@ -100,3 +100,8 @@ modelFitPCA
 
 question 4 answer is a random guess
 
+turns out the correct answer is
+"Non-PCA Accuracy: 0.65 
+PCA Accuracy: 0.72"
+
+
