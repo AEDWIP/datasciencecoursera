@@ -70,3 +70,33 @@ preProc <- preProcess(startsWith_IL,method="pca", thresh=0.8)
 preProc
 ```
 
+## Question 4
+Load the Alzheimer's disease data using the commands:
+
+```{r}
+library(caret)
+library(AppliedPredictiveModeling)
+set.seed(3433)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
+training = adData[ inTrain,]
+testing = adData[-inTrain,]
+```
+
+Create a training data set consisting of only the predictors with variable names beginning with IL and the diagnosis. Build two predictive models, one using the predictors as they are and one using PCA with principal components explaining 80% of the variance in the predictors. Use method="glm" in the train function. What is the accuracy of each method in the test set? Which is more accurate?
+
+```{r}
+# grep pattern problem we get cols that start with 'I'
+trainData <- training[, grep("^Il*", names(predictors))]
+modelFit <- train(training$diagnosis ~ .,method="glm",data=trainData)
+modelFit
+
+preProc <- preProcess(trainData,method="pca")
+trainPCA <- predict(preProc,trainData)
+modelFitPCA <- train(training$diagnosis ~ .,method="glm",data=trainPCA)
+modelFitPCA
+```
+
+question 4 answer is a random guess
+
