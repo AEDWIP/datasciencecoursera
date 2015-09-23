@@ -5,6 +5,13 @@ date: "September 22, 2015"
 output: html_document
 ---
 
+For this quiz we will be using several R packages. R package versions change over time, the right answers have been checked using the following versions of the packages. 
+
+AppliedPredictiveModeling: v1.1.6 
+caret: v6.0.47 
+
+If you aren't using these versions of the packages, your answers may not exactly match the right answer, but hopefully should be close.
+
 ##Question 1
 Load the Alzheimer's disease data using the commands:
 
@@ -62,7 +69,7 @@ Find all the predictor variables in the training set that begin with IL. Perform
 
 ```{r}
 #startsWith_IL <- names(predictors)
-startsWith_IL<- predictors[,grep("^Il*", names(predictors))]
+startsWith_IL<- predictors[,grep("^IL", names(predictors))]
 
 #preProc <- preProcess(log10(startsWith_IL),method="pca",pcaComp=2)
 #preProc <- preProcess(log10(startsWith_IL),method="pca")
@@ -87,8 +94,7 @@ testing = adData[-inTrain,]
 Create a training data set consisting of only the predictors with variable names beginning with IL and the diagnosis. Build two predictive models, one using the predictors as they are and one using PCA with principal components explaining 80% of the variance in the predictors. Use method="glm" in the train function. What is the accuracy of each method in the test set? Which is more accurate?
 
 ```{r}
-# grep pattern problem we get cols that start with 'I'
-trainData <- training[, grep("^Il*", names(predictors))]
+trainData <- training[, grep("^IL", names(predictors))]
 modelFit <- train(training$diagnosis ~ .,method="glm",data=trainData)
 modelFit
 
