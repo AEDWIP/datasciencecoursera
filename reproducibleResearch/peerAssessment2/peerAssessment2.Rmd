@@ -5,30 +5,48 @@ date: "September 23, 2015"
 output: html_document
 ---
 
-## Download data and documentation 
-```{r}
+## Download data and documentation, and load data 
+```{r load data if needed}
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
 fileName <- "repdata-data-StormData.csv.bz2"
 dataDir <- "data/"
-dataFile <- sprintf("%s%s", dataDir, fileName)
+dataFileZip <- sprintf("%s%s", dataDir, fileName)
+dataFile <- sprintf("%s%s", dataDir, "repdata-data-StormData.csv")
 if (!file.exists(dataDir)) { dir.create(dataDir)}
 if (!file.exists(dataFile)) {
-  download.file(fileURL, destfile=dataFile, method="curl")
+  download.file(fileURL, destfile=dataFileZip, method="curl")
   dateDownLoaded <- date()
   write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
+  
+  library(R.utils)
+  bunzip2(dataFileZip)
 }
 
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf"
 fileName <- "stormDataDocumentation.pdf"
-dataFile <- sprintf("%s%s", dataDir, fileName)
-if (!file.exists(dataFile)) {
-  download.file(fileURL, destfile=dataFile, method="curl")
+docFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(docFile)) {
+  download.file(fileURL, destfile=docFile, method="curl")
 }
 
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf"
 fileName <- "FAQ.pdf"
-dataFile <- sprintf("%s%s", dataDir, fileName)
-if (!file.exists(dataFile)) {
-  download.file(fileURL, destfile=dataFile, method="curl")
+faqFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(faqFile)) {
+  download.file(fileURL, destfile=faqFile, method="curl")
 }
+
+if (!exists("dTable")){
+    # line 54 did not have two elements, fill should fix this for us
+    csv <- read.csv(dataFile, header=TRUE, fill=TRUE)
+    library(data.table)
+    dTable <- data.table(csv)
+}
+
+#clean up. Temporarly turn off warnings about missing objects not found
+options(warn=-1) 
+rm(csv, dataDir, dataFile, dataFileZip, dateDownLoaded, docFile, faqFile, fileName, fileURL)
+options(warn=0) 
+
 ```
+
