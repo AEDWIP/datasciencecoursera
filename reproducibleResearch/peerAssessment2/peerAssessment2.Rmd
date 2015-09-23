@@ -1,0 +1,34 @@
+---
+title: 'Reproducible Research: Peer Assessment 2'
+author: "Andrew E. Davidson"
+date: "September 23, 2015"
+output: html_document
+---
+
+## Download data and documentation 
+```{r}
+fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+fileName <- "repdata-data-StormData.csv.bz2"
+dataDir <- "data/"
+dataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(dataDir)) { dir.create(dataDir)}
+if (!file.exists(dataFile)) {
+  download.file(fileURL, destfile=dataFile, method="curl")
+  dateDownLoaded <- date()
+  write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
+}
+
+fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf"
+fileName <- "stormDataDocumentation.pdf"
+dataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(dataFile)) {
+  download.file(fileURL, destfile=dataFile, method="curl")
+}
+
+fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf"
+fileName <- "FAQ.pdf"
+dataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(dataFile)) {
+  download.file(fileURL, destfile=dataFile, method="curl")
+}
+```
