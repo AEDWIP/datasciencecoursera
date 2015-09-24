@@ -79,9 +79,12 @@ library(ggplot2)
 # this graph is really close
 #q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",colour=EVTYPE, data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
 
-q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
+#q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
 
-q1Graph
+q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",data=zz[1:10,], geom="bar", fill=factor(EVTYPE), main="10 Most Harmfull Storm Types to Public Health")
+
+q1Graph + theme(axis.text.x=element_blank())
+zz[1:10,]
 ```
 
 ## AED hacks
