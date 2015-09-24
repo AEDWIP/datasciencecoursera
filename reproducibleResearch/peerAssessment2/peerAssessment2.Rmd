@@ -91,7 +91,28 @@ nrow(h)
 ## Question 2:
 Across the United States, which types of events have the greatest economic consequences?
 
-```{r}
+```{r q2 preprocess data}
+
+# test from discsion forum
+ltr  <- c("B" , "M" , "K", "")
+mult <- c(10^9, 10^6, 10^3, 0)
+dd <- dTable[1:10, list(PROPDMG, PROPDMGEXP)]
+val <- dd$PROPDMG * mult[match(dd$PROPDMGEXP, ltr)]
+
+123 * mult[match(NA, ltr)] # returns NA
+123 * mult[match("s", ltr)] # returns NA
+
+#propDamageData <- dTable[match(dTable$PROPDMGEXP,ltr), list(PROPDMG, PROPDMGEXP)]
+#cropDamageData <- dTable[, list(CROPDMG, CROPDMGEXP)]
+propDamageData <- dTable[
+                        match(dTable$PROPDMGEXP,ltr), 
+                        list(PROPDMG, PROPDMGEXP, AMT=PROPDMG * mult[match(dTable$PROPDMGEXP,ltr)])
+                        ]
+
+
+```
+
+```{r hacks}
 dTable[1:10, list(PROPDMG, PROPDMGEXP, AEDWIP=(PROPDMG * 2)]
 dTable[1:10, list(PROPDMG, PROPDMGEXP, AEDWIP=(PROPDMG * 2), A2=as.numeric(levels(PROPDMGEXP),PROPDMGEXP)]
 
