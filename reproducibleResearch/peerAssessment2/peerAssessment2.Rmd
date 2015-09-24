@@ -7,9 +7,9 @@ output: html_document
 
 ## Synopsis
 Data from U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database was anaylised to identify which kinds of storms where most harmful. By harm we identified
-Storm types that where the most destructive interms of either economic cost or public health. The most harmful storm types in terms of public health where found to be "Tornados", "Excessive Heat", and "TSTM Wind". The most harmful storm types in terms of ecnomic cost where found to be "Flood", "Hurricane/Typhoon", and "Strom Surge".
+Storm types that where the most destructive interms of either economic cost or public health. The most harmful storm types in terms of public health where found to be "Tornados", "Excessive Heat", and "TSTM Wind". The most harmful storm types in terms of ecnomic cost where found to be "Flood", "Hurricane/Typhoon", and "Tornados".
 
-## Pre processing
+## Data processing
 
 Down load the data and unzip if its not already on our computer
 ```{r load data and uzip if needed}
@@ -29,7 +29,7 @@ if (!file.exists(dataFile)) {
 }
 ```
 
-Down load the data releated documentation if neede
+Down load the data releated documentation if needed
 ```{r down load documentation}
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf"
 fileName <- "stormDataDocumentation.pdf"
@@ -59,41 +59,34 @@ if (!exists("dTable")){
 options(warn=-1) 
 rm(csv, dataDir, dataFile, dataFileZip, dateDownLoaded, docFile, faqFile, fileName, fileURL)
 options(warn=0) 
-
 ```
 
-## Question 1:
+## Selecting data
+
+### Question 1: 
 Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
 
+We created a new table that had 2 columns. The Strom event type and the total 
+number of deaths and injuries that could be directly attributed to the storm
 
+Next we aggregated the number of deaths and injuries by the storm type
+
+Finally we ordered the results in decreasing order
 ```{r use tables}
 q1Data <- dTable[, list(EVTYPE, HARM = FATALITIES + INJURIES)]
 q1AggregatedData <- q1Data[, list(TOTAL_HARM=sum(HARM)), by=EVTYPE]
 q1OrderedData <- q1AggregatedData[order(TOTAL_HARM, decreasing=TRUE),]
 ```
 
-aedwip graph
-```{r q1 graph}
-library(ggplot2)
-
-q1Graph <- qplot(
-    y=TOTAL_HARM, x=EVTYPE, stat="identity", data=q1OrderedData[1:10,], 
-    geom="bar", fill=factor(EVTYPE), 
-    main="10 Most Harmfull Storm Types to Public Health")
-
-q1Graph + theme(axis.text.x=element_blank())
-```
-
-table 
-```{r q1 data table }
-q1OrderedData[1:10,]
-```
-
-## Question 2:
+### Question 2:
 Across the United States, which types of events have the greatest economic consequences?
 
-```{r q2 calculate total damage in dollars}
+For this part of our analysis we defined total ecnomic damage in dollars to be
+a combination of both crop and property damage. Economic damage can be in the 
+billions of dollars. To normalize the data we need to take the damage column and 
+multiple by a scale factor. 
 
+```{r q2 calculate total damage in dollars}
 ltr  <- c("B" , "M" , "K", "")
 multFactor <- c(10^9, 10^6, 10^3, 0)
 damageData <- dTable[,
@@ -105,15 +98,37 @@ damageData <- dTable[,
 damageData$TOTAL_AMOUNT <- damageData[,PROPDMGAMT] + damageData[,CROPDMGAMT]
 ```
 
-blah blah blah
+Next we aggrated the amount by the storm type and ordered the value.
 
 ```{r q2 aggregate by storm type}
-#q1AggregatedData <-    q1Data[, list(TOTAL_HARM=sum(HARM                   )), by=EVTYPE]
 q2AggregatedData <- damageData[, list(TOTAL_AMOUNT=sum(TOTAL_AMOUNT, na.rm=TRUE)), by=EVTYPE]
 q2OrderedData <- q2AggregatedData[order(TOTAL_AMOUNT, decreasing=TRUE),]
 ```
 
-blah blah blah
+## Results :
+
+## Question 1:
+Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+
+```{r q1 graph}
+library(ggplot2)
+
+q1Graph <- qplot(
+    y=TOTAL_HARM, x=EVTYPE, stat="identity", data=q1OrderedData[1:10,], 
+    geom="bar", fill=factor(EVTYPE), 
+    main="10 Most Harmfull Storm Types to Public Health")
+
+q1Graph + theme(axis.text.x=element_blank())
+```
+
+Table of 10 Most Harmfull Storm Types to Public Health
+```{r q1 data table }
+q1OrderedData[1:10,]
+```
+
+## Question 2:
+Across the United States, which types of events have the greatest economic consequences?
 
 ```{r question 2 graph}
 q2Graph <- qplot(
@@ -123,4 +138,9 @@ q2Graph <- qplot(
    )
 
 q2Graph + theme(axis.text.x=element_blank()) +  ylab("damage amount in $")
+```
+
+Table of 10 Most Economical Harmful Storm Types
+```{r q2 data table }
+q2OrderedData[1:10,]
 ```
