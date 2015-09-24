@@ -5,8 +5,10 @@ date: "September 23, 2015"
 output: html_document
 ---
 
-## Download data and documentation, and load data 
-```{r load data if needed}
+## Pre processing
+
+Down load the data and unzip if its not already on our computer
+```{r load data and uzip if needed}
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
 fileName <- "repdata-data-StormData.csv.bz2"
 dataDir <- "data/"
@@ -21,7 +23,10 @@ if (!file.exists(dataFile)) {
   library(R.utils)
   bunzip2(dataFileZip)
 }
+```
 
+Down load the data releated documentation if neede
+```{r down load documentation}
 fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf"
 fileName <- "stormDataDocumentation.pdf"
 docFile <- sprintf("%s%s", dataDir, fileName)
@@ -35,7 +40,11 @@ faqFile <- sprintf("%s%s", dataDir, fileName)
 if (!file.exists(faqFile)) {
   download.file(fileURL, destfile=faqFile, method="curl")
 }
+```
 
+Load data into memory and remove tempory variables. We'll temporarly turn off warnings about missing objects not found
+
+```{r load data into memory}
 library(data.table)
 if (!exists("dTable")){
     # line 54 did not have two elements, fill should fix this for us
@@ -43,7 +52,6 @@ if (!exists("dTable")){
     dTable <- data.table(csv)
 }
 
-#clean up. Temporarly turn off warnings about missing objects not found
 options(warn=-1) 
 rm(csv, dataDir, dataFile, dataFileZip, dateDownLoaded, docFile, faqFile, fileName, fileURL)
 options(warn=0) 
@@ -58,9 +66,9 @@ Across the United States, which types of events (as indicated in the EVTYPE vari
 q1Data <- dTable[, list(EVTYPE, HARM = FATALITIES + INJURIES)]
 q1AggregatedData <- q1Data[, list(TOTAL_HARM=sum(HARM)), by=EVTYPE]
 q1OrderedData <- q1AggregatedData[order(TOTAL_HARM, decreasing=TRUE),]
-nrow(q1OrderedData[TOTAL_HARM != 0])
 ```
 
+aedwip graph
 ```{r q1 graph}
 library(ggplot2)
 
@@ -70,6 +78,10 @@ q1Graph <- qplot(
     main="10 Most Harmfull Storm Types to Public Health")
 
 q1Graph + theme(axis.text.x=element_blank())
+```
+
+table 
+```{r q1 data table }
 q1OrderedData[1:10,]
 ```
 
