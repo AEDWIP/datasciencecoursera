@@ -54,7 +54,42 @@ options(warn=0)
 Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
 
 
-```{r}
+
+
+```{r use tables}
+xx <- dTable[, list(EVTYPE, HARM = FATALITIES + INJURIES)]
+yy <- xx[, list(TOTAL_HARM=sum(HARM)), by=EVTYPE]
+zz <- yy[order(TOTAL_HARM, decreasing=TRUE),]
+nrow(zz[TOTAL_HARM != 0])
+```
+
+```{r q1 graph}
+library(ggplot2)
+#bad q1Graph <- ggplot(zz[1:10,]) #, aes(factor(TOTAL_HARM))
+# bad q1Graph + geom_bar()
+
+# y axis is bad q1Graph <- qplot(factor(EVTYPE), data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
+# bad q1Graph <- qplot(y=TOTAL_HARM, x=factor(EVTYPE), data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
+
+# key has factor, and event type, one is black the other is color
+#q1Graph <- qplot(y=TOTAL_HARM, x=factor(EVTYPE), factor(EVTYPE), colour=EVTYPE, data=zz[1:10,], geom="point", fill=factor(EVTYPE))
+
+#q1Graph <- qplot(y=TOTAL_HARM, x=factor(EVTYPE), colour=EVTYPE, data=zz[1:10,], geom="point", fill=factor(EVTYPE))
+
+# this graph is really close
+#q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",colour=EVTYPE, data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
+
+q1Graph <- qplot(y=TOTAL_HARM, x=EVTYPE, stat="identity",data=zz[1:10,], geom="bar", fill=factor(EVTYPE))
+
+q1Graph
+```
+
+## AED hacks
+length(unique(dTable[,EVTYPE]))
+dt <- data.table(a=1:2, b=2:3, c=3:4)
+dt[, (b, c)]
+
+```{r q1: table is converted back to data frame}
 x <- dTable[, list(EVTYPE,FATALITIES, INJURIES)]
 y <- x[, list(EVTYPE, HARM=FATALITIES + INJURIES)]
 a <- aggregate(. ~ EVTYPE, data=y, FUN=sum)
@@ -64,18 +99,5 @@ o <- a[order(a$HARM, decreasing=TRUE),]
 h<-o[o$HARM != 0,]
 nrow(h)
 ```
-
-```{r use tables}
-xx <- dTable[, list(EVTYPE, HARM = FATALITIES + INJURIES)]
-yy <- xx[, list(TOTAL_HARM=sum(HARM)), by=EVTYPE]
-zz <- yy[order(TOTAL_HARM, decreasing=TRUE),]
-nrow(zz[TOTAL_HARM != 0])
-```
-
-## AED hacks
-length(unique(dTable[,EVTYPE]))
-dt <- data.table(a=1:2, b=2:3, c=3:4)
-dt[, (b, c)]
-
 ## Question 2:
 Across the United States, which types of events have the greatest economic consequences?
