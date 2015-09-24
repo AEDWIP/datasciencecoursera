@@ -1,9 +1,13 @@
 ---
-title: 'Reproducible Research: Peer Assessment 2'
+title: 'Identifing Harmful Storm Types'
 author: "Andrew E. Davidson"
 date: "September 23, 2015"
 output: html_document
 ---
+
+## Synopsis
+Data from U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database was anaylised to identify which kinds of storms where most harmful. By harm we identified
+Storm types that where the most destructive interms of either economic cost or public health. The most harmful storm types in terms of public health where found to be "Tornados", "Excessive Heat", and "TSTM Wind". The most harmful storm types in terms of ecnomic cost where found to be "Flood", "Hurricane/Typhoon", and "Strom Surge".
 
 ## Pre processing
 
