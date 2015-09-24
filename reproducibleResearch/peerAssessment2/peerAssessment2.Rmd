@@ -106,9 +106,13 @@ val <- dd$PROPDMG * mult[match(dd$PROPDMGEXP, ltr)]
 #cropDamageData <- dTable[, list(CROPDMG, CROPDMGEXP)]
 propDamageData <- dTable[
                         match(dTable$PROPDMGEXP,ltr), 
-                        list(PROPDMG, PROPDMGEXP, AMT=PROPDMG * mult[match(dTable$PROPDMGEXP,ltr)])
+                        list(PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP,
+                             PROPDMGAMT=PROPDMG * mult[match(dTable$PROPDMGEXP,ltr)],
+                             CROPDMGAMT=CROPDMG * mult[match(dTable$CROPDMGEXP,ltr)]
+                             )
                         ]
 
+#                             CROPDMGAMT=CROPDMG * mult[match(dTable$CROPDMGEXP,ltr)],
 
 ```
 
