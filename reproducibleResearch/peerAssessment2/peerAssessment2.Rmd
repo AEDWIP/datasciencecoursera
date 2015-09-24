@@ -90,3 +90,26 @@ nrow(h)
 ```
 ## Question 2:
 Across the United States, which types of events have the greatest economic consequences?
+
+```{r}
+dTable[1:10, list(PROPDMG, PROPDMGEXP, AEDWIP=(PROPDMG * 2)]
+dTable[1:10, list(PROPDMG, PROPDMGEXP, AEDWIP=(PROPDMG * 2), A2=as.numeric(levels(PROPDMGEXP),PROPDMGEXP)]
+
+a <- dTable[PROPDMGEXP == "K", list(PROPDMG,PROPDMGEXP)]
+nrow(a)
+
+b <- dTable[PROPDMGEXP == "K" | PROPDMGEXP == "M", list(PROPDMG,PROPDMGEXP)]
+nrow(b)
+
+c <- dTable[PROPDMGEXP == "K" | PROPDMGEXP == "M" | PROPDMGEXP == "B", list(PROPDMG,PROPDMGEXP)]
+nrow(c)
+
+# this selects rows where we have good property damage data
+d <- dTable[PROPDMGEXP == "K" | PROPDMGEXP == "k" | PROPDMGEXP == "M" | PROPDMGEXP == "m" | PROPDMGEXP == "B" | PROPDMGEXP == "b", list(PROPDMG,PROPDMGEXP)]
+nrow(d)
+
+# this selects rows where we have good crop damage data
+e <- dTable[CROPDMGEXP == "K" | CROPDMGEXP == "k" | CROPDMGEXP == "M" | CROPDMGEXP == "m" | CROPDMGEXP == "B" | CROPDMGEXP == "b", list(CROPDMG,CROPDMGEXP)]
+nrow(e)
+
+```
