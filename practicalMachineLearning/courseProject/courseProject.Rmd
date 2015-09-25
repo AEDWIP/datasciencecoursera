@@ -58,3 +58,23 @@ options(warn=-1)
 rm(csv, dataDir, dataFileZip, dateDownLoaded, testingDataFile,trainingDataFile, fileURL, docFile, fileName)
 options(warn=0) 
 ```
+
+
+## Exploring the data
+Documentation suggestest the sensors are placed on the subjects forearm, arm,
+belt, and on the dumbbell. It appears there is a lot of summary releated data
+for each sample. We should probably just work the observed data
+
+```{r explore data lots of junk}
+grep("roll_forearm", names(trainTable), value=TRUE)
+```
+
+How does time data work? 
+```{r exploring time}
+grep("time", names(trainTable), value=TRUE)
+
+agg <- trainTable[user_name=="carlitos", sum(raw_timestamp_part_2), by=raw_timestamp_part_1]
+dim(agg)
+agg[1:10,]
+
+```
