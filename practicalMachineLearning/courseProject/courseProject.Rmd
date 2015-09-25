@@ -5,18 +5,56 @@ date: "September 25, 2015"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Synopsis
+aedwip
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Data processing
 
-```{r}
-summary(cars)
+Down load the data and documentation
+```{r load training and testing data }
+fileURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+fileName <- "pml-training.csv"
+dataDir <- "data/"
+trainingDataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(dataDir)) { dir.create(dataDir)}
+if (!file.exists(trainingDataFile)) {
+  download.file(fileURL, destfile=trainingDataFile, method="curl")
+  dateDownLoaded <- date()
+  write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
+}
+
+fileURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+fileName <- "pml-testing.csv"
+testingDataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(testingDataFile)) {
+  download.file(fileURL, destfile=testingDataFile, method="curl")
+}
 ```
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
+Down load the data releated documentation if needed
+```{r down load documentation}
+fileURL <- "http://groupware.les.inf.puc-rio.br/har"
+fileName <- "har.html"
+docFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(docFile)) {
+  download.file(fileURL, destfile=docFile, method="curl")
+}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Load data into memory and remove tempory variables. We'll temporarly turn off warnings about missing objects not found
+
+```{r load data into memory}
+library(data.table)
+if (!exists("trainTable")){
+    csv <- read.csv(trainingDataFile, header=TRUE, fill=TRUE)
+    trainTable <- data.table(csv)
+}
+
+if (!exists("testTable")){
+    csv <- read.csv(testingDataFile, header=TRUE, fill=TRUE)
+    testTable <- data.table(csv)
+}
+options(warn=-1) 
+rm(csv, dataDir, dataFileZip, dateDownLoaded, testingDataFile,trainingDataFile, fileURL, docFile, fileName)
+options(warn=0) 
+```
