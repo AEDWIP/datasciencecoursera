@@ -61,31 +61,8 @@ rm(csv, dataDir, dataFileZip, dateDownLoaded, testingDataFile,trainingDataFile, 
 options(warn=0) 
 ```
 
-
-## Exploring the data
-Documentation states accelorometers are placed on the subjects forearm, arm,
-belt, and on the dumbbell. It appears there is a lot of summary releated data
-for each sample. We should probably just work the observed data
-
-```{r explore data lots of junk}
-grep("roll_forearm", names(rawTrainTable), value=TRUE)
-```
-
-How does time data work? 
-```{r exploring time}
-grep("time", names(rawTrainTable), value=TRUE)
-
-agg <- rawTrainTable[user_name=="carlitos", sum(raw_timestamp_part_2), by=raw_timestamp_part_1]
-dim(agg)
-agg[1:10,]
-
-```
-
 ## Pre processing and selecting data
-We have a lot of data. There is a good chance a lot of it is not useful. We'll 
-want to reduce the number of featues we use if possible. Our model will train
-faster and be easier to understand.In general we do not want to edit the raw data we down loaded. Instead we create
-a new clean data set. 
+We have a lot of data. There is a good chance a lot of it is not useful. We  want to reduce the number of featues we use if possible. Our model will train faster and be easier to understand.In general we do not want to edit the raw data we down loaded. Instead we create a new clean data set. 
 
 The first thing we want to get rid of the first 7 columns.
 "X" appears to identify each observation. If we need to know who the subject
@@ -106,19 +83,20 @@ n <- nrow(t1)
 lotsOfNA <- t1[, lapply(.SD, function(x) (sum(is.na(x), na.rm=TRUE) / n)) > 0.5]
 rmColNames <- names(t1)[lotsOfNA]
 t2 <- t1[,!rmColNames, with=FALSE]
-rm(t1, lotsOfNA, rmColNames)
+rm(t1, lotsOfNA, rmColNames, n)
 ```
 
 Check to see if any of the factors haveZero- and Near Zero-Variance. If remove
 them, they will not be good predictors
 
 ```{r look for near zero variance factors}
+library(caret)
 nzv <- nearZeroVar(t2, saveMetrics= TRUE)
 nearZeroCols <- nzv[nzv$nzv,4]
 numberOfNearZeroFeatures <- sum(nearZeroCols)
 rmColNames <- names(t2)[nzv[,4]]
 t3 <- t2[,!rmColNames, with=FALSE]
-rm(t2, nearZeroCols, rmColNames)
+rm(t2, nearZeroCols, numberOfNearZeroFeatures, rmColNames, nzv)
 ```
 
 Look for pairs of highly correlated variables. Removing one of the variables
@@ -132,7 +110,7 @@ summary(descrCor[upper.tri(descrCor)])
 
 highlyCorDescr <- findCorrelation(descrCor, cutoff = .90)
 t4 <- t3[,!highlyCorDescr, with=FALSE]
-
+rm(tmp, t3, descrCor, highlyCorDescr, colNames)
 ```
 
 ##Random forest
