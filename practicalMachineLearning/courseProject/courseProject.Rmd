@@ -24,13 +24,6 @@ if (!file.exists(trainingDataFile)) {
   dateDownLoaded <- date()
   write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
 }
-
-fileURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
-fileName <- "pml-testing.csv"
-testingDataFile <- sprintf("%s%s", dataDir, fileName)
-if (!file.exists(testingDataFile)) {
-  download.file(fileURL, destfile=testingDataFile, method="curl")
-}
 ```
 
 Down load the data releated documentation if needed
@@ -43,21 +36,28 @@ if (!file.exists(docFile)) {
 }
 ```
 
-Load data into memory and remove tempory variables. We'll temporarly turn off warnings about missing objects not found
+* Load data into memory 
+* split into training and test sets
+* clean up any tempory variables
 
-```{r load data into memory}
+```{r load data into memory and split into training and test sets}
 library(data.table)
-if (!exists("rawTrainTable")){
-    csv <- read.csv(trainingDataFile, header=TRUE, fill=TRUE)
-    rawTrainTable <- data.table(csv)
+library(caret)
+if (!exists("trainSet") ||  exists("testSet")) {
+    if (!exists("csv")) {
+        csv <- read.csv(trainingDataFile, header=TRUE, fill=TRUE)
+        }
+    
+    inTrain <- createDataPartition(y=csv$classe, p=0.7, list=FALSE)
+    trainSetDF <- csv[inTrain,]
+    testSetDF <- csv[-inTrain,]
+    trainSet <- data.table(trainSetDF)
+    testSet <- data.table(testSetDF)
 }
 
-if (!exists("rawTestTable")){
-    csv <- read.csv(testingDataFile, header=TRUE, fill=TRUE)
-    rawTestTable <- data.table(csv)
-}
 options(warn=-1) 
-rm(csv, dataDir, dataFileZip, dateDownLoaded, testingDataFile,trainingDataFile, fileURL, docFile, fileName)
+rm(csv, trainSetDF, testSetDF, dataDir, dataFileZip, dateDownLoaded, testingDataFile,
+   trainingDataFile, fileURL, docFile, fileName)
 options(warn=0) 
 ```
 
@@ -71,9 +71,8 @@ and 'binning' samples based on time. If our model does not work well we can
 consider using them in a future analysis.
 
 ```{r pre processing and selcting data remove first 7 columns}
-rmCols <- names(rawTrainTable)[1:7]
-rmCols
-t1 <- rawTrainTable[,!rmCols, with=FALSE]
+rmCols <- names(trainSet)[1:7]
+t1 <- trainSet[,!rmCols, with=FALSE]
 rm(rmCols)
 ```
 
@@ -90,7 +89,6 @@ Check to see if any of the factors haveZero- and Near Zero-Variance. If remove
 them, they will not be good predictors
 
 ```{r look for near zero variance factors}
-library(caret)
 nzv <- nearZeroVar(t2, saveMetrics= TRUE)
 nearZeroCols <- nzv[nzv$nzv,4]
 numberOfNearZeroFeatures <- sum(nearZeroCols)
@@ -126,7 +124,6 @@ parameter ntree = integer # what is default value?
 caret train parmeter preProcess="pca"
 
 ```{r train model}
-library(caret)
 library(doParallel)
 set.seed(32343)
 #rpart is regression classifier
@@ -156,14 +153,16 @@ model$finalModel
 
 ```{r test data}
 # running train changed the name of column "classe" to ".outcome"
-setnames(t4, ".outcome", "classe")
-#testTable <- rawTestTable[, names(t4), with=FALSE]
-#t <- match(names(t4), names(rawTestTable))
+#setnames(t4, ".outcome", "classe")
 
 # test data does not have a column 'classe'
-l <- names(t4) != "classe"
+#l <- names(t4) != "classe"
+l <- names(t4) != ".outcome"
 colNames <- names(t4)[l]
-testTable <- rawTestTable[, colNames, with=FALSE]
+testTable <- testSet[, colNames, with=FALSE]
 
+pred <- predict(model, newdata=testTable)
+table(pred, testSet$classe)
+confusionMatrix(pred, testSet$classe)
 ```
 
