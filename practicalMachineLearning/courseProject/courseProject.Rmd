@@ -121,6 +121,20 @@ t3 <- t2[,!rmColNames, with=FALSE]
 rm(t2, nearZeroCols, rmColNames)
 ```
 
+Look for pairs of highly correlated variables. Removing one of the variables
+will make our model simpler and should train faster.
+
+```{r look for highly correlated variables} 
+colNames <- grep("classe", names(t3), invert=TRUE)
+tmp <- t3[,colNames, with=FALSE]
+descrCor <- cor(tmp)
+summary(descrCor[upper.tri(descrCor)])
+
+highlyCorDescr <- findCorrelation(descrCor, cutoff = .90)
+t4 <- t3[,!highlyCorDescr, with=FALSE]
+
+```
+
 ##Random forest
 our label is 'classe'
 
