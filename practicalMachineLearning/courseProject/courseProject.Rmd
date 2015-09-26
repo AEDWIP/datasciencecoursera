@@ -8,6 +8,8 @@ output: html_document
 ## Synopsis
 aedwip
 
+ref: http://topepo.github.io/caret/preprocess.html
+
 ## Data processing
 
 Down load the data and documentation
@@ -107,10 +109,21 @@ t2 <- t1[,!rmColNames, with=FALSE]
 rm(t1, lotsOfNA, rmColNames)
 ```
 
+Check to see if any of the factors haveZero- and Near Zero-Variance. If remove
+them, they will not be good predictors
+
+```{r look for near zero variance factors}
+nzv <- nearZeroVar(t2, saveMetrics= TRUE)
+nearZeroCols <- nzv[nzv$nzv,4]
+numberOfNearZeroFeatures <- sum(nearZeroCols)
+rmColNames <- names(t2)[nzv[,4]]
+t3 <- t2[,!rmColNames, with=FALSE]
+rm(t2, nearZeroCols, rmColNames)
+```
+
 ##Random forest
 our label is 'classe'
 
-I do not know what 'X' is
 
 ```{r train model}
 library(caret)
@@ -119,7 +132,7 @@ library(caret)
 #print(modFit$finalModel)
 
 # rf is random forest
-#system.time(modFit <- train(classe ~ .,data=trainTable, method="rf", prox=TRUE))
+#system.time(modFit <- train(classe ~ .,data=t2, method="rf", prox=TRUE))
 #modFit
 
 ```
