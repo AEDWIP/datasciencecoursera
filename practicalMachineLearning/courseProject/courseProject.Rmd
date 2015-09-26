@@ -147,7 +147,7 @@ system.time(model  <- train(classe ~ .,
                             tuneGrid = tgrid, 
                             allowParallel=TRUE))
 
-model
+model$finalModel
 #saveRDS(modFit, "mymodel.rds")
 # mod2 <- readRDS("mymodel.rds")
 ```
