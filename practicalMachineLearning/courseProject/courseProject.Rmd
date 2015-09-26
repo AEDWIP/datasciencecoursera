@@ -137,17 +137,40 @@ t4 <- t3[,!highlyCorDescr, with=FALSE]
 
 ##Random forest
 our label is 'classe'
+http://topepo.github.io/caret/Random_Forest.html
 
+Tuning Parameters: mtry (#Randomly Selected Predictors)
+
+http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+
+parameter ntree = integer # what is default value? 
+
+caret train parmeter preProcess="pca"
 
 ```{r train model}
 library(caret)
+library(doParallel)
+set.seed(32343)
 #rpart is regression classifier
 #modFit <- train(classe ~ .,method="rpart",data=trainTable)
 #print(modFit$finalModel)
 
 # rf is random forest
-#system.time(modFit <- train(classe ~ .,data=t2, method="rf", prox=TRUE))
-#modFit
+#system.time(modFit <- train(classe ~ .,data=t4, method="rf", proximity=TRUE, allowParallel=TRUE))
 
+# speed up random forest by turning off resampling
+fitControl <- trainControl(method = "none")
+tgrid <- expand.grid(mtry=c(6)) # mtry (#Randomly Selected Predictors)
+
+system.time(model  <- train(classe ~ .,
+                            data = t4, 
+                            method="rf", 
+                            trControl=fitControl,
+                            tuneGrid = tgrid, 
+                            allowParallel=TRUE))
+
+model
+#saveRDS(modFit, "mymodel.rds")
+# mod2 <- readRDS("mymodel.rds")
 ```
 
