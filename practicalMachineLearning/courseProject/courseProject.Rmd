@@ -100,34 +100,11 @@ rm(rmCols)
 
 Next we want to find and remove any features that are missing most of their data
 ```{r remove features with lots of missing data}
-n <- nrow(t1) # 19622
-
-#sum(is.na(t1[,max_picth_belt]), na.rm=TRUE) # 19216
-
-#.SD is short hand for all columns
-#numNA <- t1[, lapply(.SD, function(x) if(is.numeric(x) | is.integer(x)) sum(is.na(x)))]
-#numNA <- t1[, lapply(.SD, function(x) if(is.numeric(x)) sum(is.na(x), na.rm=TRUE))]
-
-# rmCols <-c()
-# for (i in 1:length(colName)) {
-#     print(i)
-#     is.numeric(t1[,c(i)])
-#     #if (is.numeric(t1$i) | is.integer(t1$i)) {
-#     if (is.numeric(t1[,list(i)])) {
-#         print("good")
-#     }
-# }
-
-
-# numericCols <- sapply(t1, is.numeric)
-# integerCols <- sapply(t1, is.integer)
-# candidateCols <- integerCols + numericCols # 150 out of 153? we have lot of factors
-# x <- t1[,nums, with=FALSE]
-
+n <- nrow(t1) 
 lotsOfNA <- t1[, lapply(.SD, function(x) (sum(is.na(x), na.rm=TRUE) / n)) > 0.5]
 rmColNames <- names(t1)[lotsOfNA]
 t2 <- t1[,!rmColNames, with=FALSE]
-
+rm(t1, lotsOfNA, rmColNames)
 ```
 
 ##Random forest
