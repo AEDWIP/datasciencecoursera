@@ -152,3 +152,18 @@ model$finalModel
 # mod2 <- readRDS("mymodel.rds")
 ```
 
+## How well did we do?
+
+```{r test data}
+# running train changed the name of column "classe" to ".outcome"
+setnames(t4, ".outcome", "classe")
+#testTable <- rawTestTable[, names(t4), with=FALSE]
+#t <- match(names(t4), names(rawTestTable))
+
+# test data does not have a column 'classe'
+l <- names(t4) != "classe"
+colNames <- names(t4)[l]
+testTable <- rawTestTable[, colNames, with=FALSE]
+
+```
+
