@@ -6,13 +6,18 @@ output: html_document
 ---
 
 ## Synopsis
-aedwip
+We are given a set of acceloerometer data from subjects lifting a dumbbell. We are
+asked to come up with a model that can identify how well the subject performed
+the exerices. The results and the data from the original study can be found at
+http://groupware.les.inf.puc-rio.br/har
 
-ref: http://topepo.github.io/caret/preprocess.html
+The original data set contained 160 features. A random forest classifier was trained
+using 46 of these features and found to be very accurate.
+
 
 ## Data processing
 
-Down load the data and documentation
+1. Down load the data and documentation
 ```{r load training and testing data }
 fileURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
 fileName <- "pml-training.csv"
@@ -26,7 +31,7 @@ if (!file.exists(trainingDataFile)) {
 }
 ```
 
-Down load the data releated documentation if needed
+2. Down load the data releated documentation if needed
 ```{r down load documentation}
 fileURL <- "http://groupware.les.inf.puc-rio.br/har"
 fileName <- "har.html"
@@ -36,11 +41,11 @@ if (!file.exists(docFile)) {
 }
 ```
 
-* Load data into memory 
-* split into training and test sets
-* clean up any tempory variables
+3. Load data into memory 
+4. split into training and test sets
+5. clean up any tempory variables
 
-```{r load data into memory and split into training and test sets}
+```{r load data into memory and split into training and test sets, results='hide'}
 library(data.table)
 library(caret)
 if (!exists("trainSet") ||  exists("testSet")) {
@@ -53,22 +58,25 @@ if (!exists("trainSet") ||  exists("testSet")) {
     testSetDF <- csv[-inTrain,]
     trainSet <- data.table(trainSetDF)
     testSet <- data.table(testSetDF)
-}
+    }
 
 options(warn=-1) 
-rm(csv, trainSetDF, testSetDF, dataDir, dataFileZip, dateDownLoaded, testingDataFile,
-   trainingDataFile, fileURL, docFile, fileName)
+rm(csv, trainSetDF, testSetDF, dataDir, dataFileZip, dateDownLoaded, 
+   testingDataFile, trainingDataFile, fileURL, docFile, fileName)
 options(warn=0) 
 ```
 
 ## Pre processing and selecting data
-We have a lot of data. There is a good chance a lot of it is not useful. We  want to reduce the number of featues we use if possible. Our model will train faster and be easier to understand.In general we do not want to edit the raw data we down loaded. Instead we create a new clean data set. 
+We have a lot of data. Much of it is not useful. We to use the fewest possible number of features. This will make our model run faster and more importantly be easier to
+understand
+
+In general we do not want to edit the raw data we down loaded. Instead we create a new clean data set. 
 
 The first thing we want to get rid of the first 7 columns.
-"X" appears to identify each observation. If we need to know who the subject
-our model will not generalize well. The other variable have to do with time stamp
-and 'binning' samples based on time. If our model does not work well we can
-consider using them in a future analysis.
+"X" appears to identify each observation. We do need to know who the subject is.
+I.E. want to make sure our model generalizes to all people not just our test subjects.
+
+The other variable have to do with time stamp and 'binning' samples based on time. If our model does not work well we can consider using them in a future analysis.
 
 ```{r pre processing and selcting data remove first 7 columns}
 rmCols <- names(trainSet)[1:7]
@@ -85,8 +93,8 @@ t2 <- t1[,!rmColNames, with=FALSE]
 rm(t1, lotsOfNA, rmColNames, n)
 ```
 
-Check to see if any of the factors haveZero- and Near Zero-Variance. If remove
-them, they will not be good predictors
+Check to see if any of the factors haveZero- and Near Zero-Variance and remove
+them. They will not be good predictors
 
 ```{r look for near zero variance factors}
 nzv <- nearZeroVar(t2, saveMetrics= TRUE)
@@ -111,27 +119,24 @@ t4 <- t3[,!highlyCorDescr, with=FALSE]
 rm(tmp, t3, descrCor, highlyCorDescr, colNames)
 ```
 
-##Random forest
-our label is 'classe'
-http://topepo.github.io/caret/Random_Forest.html
+## Training the model using Random forest
+our label variable is 'classe'
+
+
+### ref:
+
+* http://topepo.github.io/caret/Random_Forest.html
+* http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
 
 Tuning Parameters: mtry (#Randomly Selected Predictors)
 
-http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+parameter ntree = integer # the default value is 500 
 
-parameter ntree = integer # what is default value? 
-
-caret train parmeter preProcess="pca"
+caret train() supports preProcess="pca"
 
 ```{r train model}
 library(doParallel)
 set.seed(32343)
-#rpart is regression classifier
-#modFit <- train(classe ~ .,method="rpart",data=trainTable)
-#print(modFit$finalModel)
-
-# rf is random forest
-#system.time(modFit <- train(classe ~ .,data=t4, method="rf", proximity=TRUE, allowParallel=TRUE))
 
 # speed up random forest by turning off resampling
 fitControl <- trainControl(method = "none")
@@ -145,18 +150,17 @@ system.time(model  <- train(classe ~ .,
                             allowParallel=TRUE))
 
 model$finalModel
-#saveRDS(modFit, "mymodel.rds")
-# mod2 <- readRDS("mymodel.rds")
 ```
 
-## How well did we do?
+## Cross Validation: How well does our model generalize?
+From our test data we want to select the parameters we trained with and use
+our random forest model to predict the sample's class. Running train() changed
+the name of the 'classe' column to '.outcome'. When we call predict we should
+not pass the 'classe' column.
+
+The confusion matrix shows our classifier performs very well
 
 ```{r test data}
-# running train changed the name of column "classe" to ".outcome"
-#setnames(t4, ".outcome", "classe")
-
-# test data does not have a column 'classe'
-#l <- names(t4) != "classe"
 l <- names(t4) != ".outcome"
 colNames <- names(t4)[l]
 testTable <- testSet[, colNames, with=FALSE]
@@ -165,4 +169,9 @@ pred <- predict(model, newdata=testTable)
 table(pred, testSet$classe)
 confusionMatrix(pred, testSet$classe)
 ```
+
+
+## references
+
+ref: http://topepo.github.io/caret/preprocess.html
 
