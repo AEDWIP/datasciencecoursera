@@ -61,7 +61,7 @@ options(warn=0)
 
 
 ## Exploring the data
-Documentation suggestest the sensors are placed on the subjects forearm, arm,
+Documentation states accelorometers are placed on the subjects forearm, arm,
 belt, and on the dumbbell. It appears there is a lot of summary releated data
 for each sample. We should probably just work the observed data
 
@@ -82,10 +82,10 @@ agg[1:10,]
 ## Pre processing and selecting data
 We have a lot of data. There is a good chance a lot of it is not useful. We'll 
 want to reduce the number of featues we use if possible. Our model will train
-faster and be easier to understand.
+faster and be easier to understand.In general we do not want to edit the raw data we down loaded. Instead we create
+a new clean data set. 
 
-In general we do not want to edit the raw data we down loaded. Instead we create
-a new clean data set. The first thing we want to get rid of the first 7 columns.
+The first thing we want to get rid of the first 7 columns.
 "X" appears to identify each observation. If we need to know who the subject
 our model will not generalize well. The other variable have to do with time stamp
 and 'binning' samples based on time. If our model does not work well we can
@@ -95,6 +95,39 @@ consider using them in a future analysis.
 rmCols <- names(rawTrainTable)[1:7]
 rmCols
 t1 <- rawTrainTable[,!rmCols, with=FALSE]
+rm(rmCols)
+```
+
+Next we want to find and remove any features that are missing most of their data
+```{r remove features with lots of missing data}
+n <- nrow(t1) # 19622
+
+#sum(is.na(t1[,max_picth_belt]), na.rm=TRUE) # 19216
+
+#.SD is short hand for all columns
+#numNA <- t1[, lapply(.SD, function(x) if(is.numeric(x) | is.integer(x)) sum(is.na(x)))]
+#numNA <- t1[, lapply(.SD, function(x) if(is.numeric(x)) sum(is.na(x), na.rm=TRUE))]
+
+# rmCols <-c()
+# for (i in 1:length(colName)) {
+#     print(i)
+#     is.numeric(t1[,c(i)])
+#     #if (is.numeric(t1$i) | is.integer(t1$i)) {
+#     if (is.numeric(t1[,list(i)])) {
+#         print("good")
+#     }
+# }
+
+
+# numericCols <- sapply(t1, is.numeric)
+# integerCols <- sapply(t1, is.integer)
+# candidateCols <- integerCols + numericCols # 150 out of 153? we have lot of factors
+# x <- t1[,nums, with=FALSE]
+
+lotsOfNA <- t1[, lapply(.SD, function(x) (sum(is.na(x), na.rm=TRUE) / n)) > 0.5]
+rmColNames <- names(t1)[lotsOfNA]
+t2 <- t1[,!rmColNames, with=FALSE]
+
 ```
 
 ##Random forest
