@@ -1,0 +1,180 @@
+---
+title: "Practical Machine Learning Course Project"
+author: "Andrew E. Davidson"
+date: "September 25, 2015"
+output: html_document
+---
+
+## Synopsis
+We are given a set of accelerometer data from subjects lifting a dumbbell. We are
+asked to come up with a model that can identify how well the subject performed
+the exercises. The results and the data from the original study can be found at
+http://groupware.les.inf.puc-rio.br/har
+
+The original data set contained 160 features. A random forest classifier was trained
+using 46 of these features and found to work very well. The accuracy on our cross
+validation data set was 99.4% with a 95% confidence intervale of (99.2% , 99.6%)
+
+## Data processing
+
+1. Down load the data and documentation
+```{r load training and testing data }
+fileURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+fileName <- "pml-training.csv"
+dataDir <- "data/"
+trainingDataFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(dataDir)) { dir.create(dataDir)}
+if (!file.exists(trainingDataFile)) {
+  download.file(fileURL, destfile=trainingDataFile, method="curl")
+  dateDownLoaded <- date()
+  write(dateDownLoaded, file=sprintf("%s%s", dataDir, "dateDownLoaded.txt"))
+}
+```
+
+2. Down load the data related documentation if needed
+```{r down load documentation}
+fileURL <- "http://groupware.les.inf.puc-rio.br/har"
+fileName <- "har.html"
+docFile <- sprintf("%s%s", dataDir, fileName)
+if (!file.exists(docFile)) {
+  download.file(fileURL, destfile=docFile, method="curl")
+}
+```
+
+3. Load data into memory 
+4. split into training and test sets
+5. clean up any temporary variables
+
+```{r load data into memory and split into training and test sets, results='hide'}
+library(data.table)
+library(caret)
+if (!exists("trainSet") ||  exists("testSet")) {
+    if (!exists("csv")) {
+        csv <- read.csv(trainingDataFile, header=TRUE, fill=TRUE)
+        }
+    
+    inTrain <- createDataPartition(y=csv$classe, p=0.7, list=FALSE)
+    trainSetDF <- csv[inTrain,]
+    testSetDF <- csv[-inTrain,]
+    trainSet <- data.table(trainSetDF)
+    testSet <- data.table(testSetDF)
+    }
+
+options(warn=-1) 
+rm(csv, trainSetDF, testSetDF, dataDir, dataFileZip, dateDownLoaded, 
+   testingDataFile, trainingDataFile, fileURL, docFile, fileName)
+options(warn=0) 
+```
+
+## Pre processing and selecting data
+We have a lot of data. Much of it is not useful. We want to use the fewest possible number of features. This will make our model run faster and more importantly be easier to
+understand
+
+In general we do not want to edit the raw data we down loaded. Instead we create a new clean data set. 
+
+The first thing we want to get rid of the first 7 columns.
+"X" appears to identify each observation. We do not need to know who the subject is.
+I.E. want to make sure our model generalizes to all people not just our test subjects.
+
+The other variable have to do with time and 'binning' samples based on time. If our model does not work well we can consider using them in a future analysis.
+
+```{r pre processing and selcting data remove first 7 columns}
+rmCols <- names(trainSet)[1:7]
+t1 <- trainSet[,!rmCols, with=FALSE]
+rm(rmCols)
+```
+
+Next we want to find and remove any features that are missing most of their data
+```{r remove features with lots of missing data}
+n <- nrow(t1) 
+lotsOfNA <- t1[, lapply(.SD, function(x) (sum(is.na(x), na.rm=TRUE) / n)) > 0.5]
+rmColNames <- names(t1)[lotsOfNA]
+t2 <- t1[,!rmColNames, with=FALSE]
+rm(t1, lotsOfNA, rmColNames, n)
+```
+
+Check to see if any of the factors haveZero- and Near Zero-Variance and remove
+them. They will not be good predictors
+
+```{r look for near zero variance factors}
+nzv <- nearZeroVar(t2, saveMetrics= TRUE)
+nearZeroCols <- nzv[nzv$nzv,4]
+numberOfNearZeroFeatures <- sum(nearZeroCols)
+rmColNames <- names(t2)[nzv[,4]]
+t3 <- t2[,!rmColNames, with=FALSE]
+rm(t2, nearZeroCols, numberOfNearZeroFeatures, rmColNames, nzv)
+```
+
+Look for pairs of highly correlated variables. Removing one of the variables
+will make our model simpler and should train faster.
+
+```{r look for highly correlated variables} 
+colNames <- grep("classe", names(t3), invert=TRUE)
+tmp <- t3[,colNames, with=FALSE]
+descrCor <- cor(tmp)
+summary(descrCor[upper.tri(descrCor)])
+
+highlyCorDescr <- findCorrelation(descrCor, cutoff = .90)
+t4 <- t3[,!highlyCorDescr, with=FALSE]
+rm(tmp, t3, descrCor, highlyCorDescr, colNames)
+```
+
+Final list of features used to train our model with
+```{r list of features}
+names(t4)
+```
+## Training the model using Random forest
+our label variable is 'classe'
+
+Tuning Parameters: mtry (#Randomly Selected Predictors)
+
+parameter ntree = integer # the default value is 500 
+
+caret train() supports preProcess="pca". In a future analysis we might try to
+use PCA to come up with a smaller set of features.
+
+```{r train model}
+library(doParallel)
+set.seed(32343)
+
+# speed up random forest by turning off resampling
+fitControl <- trainControl(method = "none")
+tgrid <- expand.grid(mtry=c(6)) # mtry (#Randomly Selected Predictors)
+
+system.time(model  <- train(classe ~ .,
+                            data = t4, 
+                            method="rf", 
+                            trControl=fitControl,
+                            tuneGrid = tgrid, 
+                            allowParallel=TRUE))
+
+model$finalModel
+```
+
+## Cross Validation: How well does our model generalize?
+From our test data we want to select the parameters we trained with and use
+our random forest model to predict the sample's class. Running train() changed
+the name of the 'classe' column to '.outcome'. When we call predict we should
+not pass the 'classe' column.
+
+The confusion matrix shows our classifier performs very well
+
+```{r test data}
+l <- names(t4) != ".outcome"
+colNames <- names(t4)[l]
+testTable <- testSet[, colNames, with=FALSE]
+
+pred <- predict(model, newdata=testTable)
+#table(pred, testSet$classe)
+confusionMatrix(pred, testSet$classe)
+```
+
+
+## references
+
+* [Original Human Activity Recognition paper](http://groupware.les.inf.puc-rio.br/har)
+* [pre processing data with caret](http://topepo.github.io/caret/preprocess.html)
+* http://topepo.github.io/caret/Random_Forest.html
+* http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+* [How to make html pages readable directly on github ](https://help.github.com/articles/creating-project-pages-manually/)
+
