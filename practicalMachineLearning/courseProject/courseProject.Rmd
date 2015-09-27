@@ -6,14 +6,14 @@ output: html_document
 ---
 
 ## Synopsis
-We are given a set of acceloerometer data from subjects lifting a dumbbell. We are
+We are given a set of accelerometer data from subjects lifting a dumbbell. We are
 asked to come up with a model that can identify how well the subject performed
-the exerices. The results and the data from the original study can be found at
+the exercises. The results and the data from the original study can be found at
 http://groupware.les.inf.puc-rio.br/har
 
 The original data set contained 160 features. A random forest classifier was trained
-using 46 of these features and found to be very accurate.
-
+using 46 of these features and found to work very well. The accuracy on our cross
+validation data set was 99.4% with a 95% confidence intervale of (99.2% , 99.6%)
 
 ## Data processing
 
@@ -31,7 +31,7 @@ if (!file.exists(trainingDataFile)) {
 }
 ```
 
-2. Down load the data releated documentation if needed
+2. Down load the data related documentation if needed
 ```{r down load documentation}
 fileURL <- "http://groupware.les.inf.puc-rio.br/har"
 fileName <- "har.html"
@@ -43,7 +43,7 @@ if (!file.exists(docFile)) {
 
 3. Load data into memory 
 4. split into training and test sets
-5. clean up any tempory variables
+5. clean up any temporary variables
 
 ```{r load data into memory and split into training and test sets, results='hide'}
 library(data.table)
@@ -67,16 +67,16 @@ options(warn=0)
 ```
 
 ## Pre processing and selecting data
-We have a lot of data. Much of it is not useful. We to use the fewest possible number of features. This will make our model run faster and more importantly be easier to
+We have a lot of data. Much of it is not useful. We want to use the fewest possible number of features. This will make our model run faster and more importantly be easier to
 understand
 
 In general we do not want to edit the raw data we down loaded. Instead we create a new clean data set. 
 
 The first thing we want to get rid of the first 7 columns.
-"X" appears to identify each observation. We do need to know who the subject is.
+"X" appears to identify each observation. We do not need to know who the subject is.
 I.E. want to make sure our model generalizes to all people not just our test subjects.
 
-The other variable have to do with time stamp and 'binning' samples based on time. If our model does not work well we can consider using them in a future analysis.
+The other variable have to do with time and 'binning' samples based on time. If our model does not work well we can consider using them in a future analysis.
 
 ```{r pre processing and selcting data remove first 7 columns}
 rmCols <- names(trainSet)[1:7]
@@ -119,20 +119,19 @@ t4 <- t3[,!highlyCorDescr, with=FALSE]
 rm(tmp, t3, descrCor, highlyCorDescr, colNames)
 ```
 
+Final list of features used to train our model with
+```{r list of features}
+names(t4)
+```
 ## Training the model using Random forest
 our label variable is 'classe'
-
-
-### ref:
-
-* http://topepo.github.io/caret/Random_Forest.html
-* http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
 
 Tuning Parameters: mtry (#Randomly Selected Predictors)
 
 parameter ntree = integer # the default value is 500 
 
-caret train() supports preProcess="pca"
+caret train() supports preProcess="pca". In a future analysis we might try to
+use PCA to come up with a smaller set of features.
 
 ```{r train model}
 library(doParallel)
@@ -166,12 +165,16 @@ colNames <- names(t4)[l]
 testTable <- testSet[, colNames, with=FALSE]
 
 pred <- predict(model, newdata=testTable)
-table(pred, testSet$classe)
+#table(pred, testSet$classe)
 confusionMatrix(pred, testSet$classe)
 ```
 
 
 ## references
 
-ref: http://topepo.github.io/caret/preprocess.html
+* [Original Human Activity Recognition paper](http://groupware.les.inf.puc-rio.br/har)
+* [pre processing data with caret](http://topepo.github.io/caret/preprocess.html)
+* http://topepo.github.io/caret/Random_Forest.html
+* http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+* [How to make html pages readable directly on github ](https://help.github.com/articles/creating-project-pages-manually/)
 
