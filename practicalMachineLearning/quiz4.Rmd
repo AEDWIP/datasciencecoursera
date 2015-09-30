@@ -1,0 +1,65 @@
+---
+title: "quiz4"
+author: "Andrew E. Davidson"
+date: "September 29, 2015"
+output: html_document
+---
+
+## question 1
+
+```{r load q1}
+library(ElemStatLearn)
+data(vowel.train)
+data(vowel.test) 
+```
+Set the variable y to be a factor variable in both the training and test set. Then set the seed to 33833. Fit (1) a random forest predictor relating the factor variable y to the remaining variables and (2) a boosted predictor using the "gbm" method. Fit these both with the train() command in the caret package. 
+
+What are the accuracies for the two approaches on the test data set? What is the accuracy among the test set samples where the two methods agree?
+
+```{r q1}
+vowel.train$y <- as.factor(vowel.train$y)
+vowel.test$y <- as.factor(vowel.test$y)
+set.seed(33833)
+
+library(caret)
+modelRF  <- train(y ~ ., data=vowel.train, method="rf")
+#gbm: Generalized Boosted Regression Models
+modelGBM <- train(y ~ ., data=vowel.train, method="gbm")
+
+print(modelRF$finalModel)
+print(modelGBM$finalModel)
+
+predRF <- predict(modelRF, vowel.test)
+predGBM <- predict(modelGBM, vowel.test)
+
+cmPredRF <- confusionMatrix(predRF, vowel.test$y)
+accuracyRF <- cmPredRF$overall["Accuracy"]
+print(accuracyRF) # 0.6060606 
+
+cmPredGBM <- confusionMatrix(predGBM, vowel.test$y)
+accuracyGBM <- cmPredGBM$overall["Accuracy"]
+print(accuracyGBM) # 0.530303
+
+#
+# What is the accuracy among the test set samples where the two methods agree?
+# I think they want us to combine the two predictions? "ie ensamble"
+# /courses/08_PracticalMachineLearning/025combiningPredictors/index.html
+#
+df <- data.frame(predRF, predGBM, y=vowel.test$y)
+combModFit <- train(y ~.,method="rf",data=df)
+combPred <- predict(combModFit, df)
+cmCombPred <- confusionMatrix(combPred, df$y)
+accuracyCmCombPred <- cmCombPred$overall["Accuracy"] # 0.6969697
+
+```
+Accuracy using RF `r  accuracyRF`
+ 
+Accuracy using GBM `r accuracyGBM`
+ 
+ 
+Accuracy combinded  `r accuracyCmCombPred`
+
+clossed answer (our package versions do not match)
+RF Accuracy = 0.6082 
+GBM Accuracy = 0.5152 
+Agreement Accuracy = 0.6361
