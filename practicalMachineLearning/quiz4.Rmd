@@ -124,6 +124,7 @@ Load the concrete data with the commands:
 ```{r q3 load}
 set.seed(3523)
 library(AppliedPredictiveModeling)
+library(caret)
 data(concrete)
 inTrain = createDataPartition(concrete$CompressiveStrength, p = 3/4)[[1]]
 training = concrete[ inTrain,]
@@ -138,7 +139,7 @@ set.seed(233)
 #lasso is a regression model with regulation
 modelLasso   <- train(CompressiveStrength ~ ., data=training, method="lasso")
 modelLasso$finalModel
-plot.enet(modelLasso$finalModel, use.color=TRUE)
+plot.enet(modelLasso$finalModel, "penalty", use.color=TRUE)
 ```
 
 I have no idea what the enet shows us? beta? max???. Some one on discussion
