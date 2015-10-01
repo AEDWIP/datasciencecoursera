@@ -114,6 +114,7 @@ print(accuracyCmCombPred)
 ```
 
 closest answer is "Stacked Accuracy: 0.88 is better than all three other methods"
+This answer is wrong
 
 ## question 3
 
@@ -141,7 +142,7 @@ plot.enet(modelLasso$finalModel, use.color=TRUE)
 ```
 
 I have no idea what the enet shows us? beta? max???. Some one on discussion
-suggested the answer is cement
+suggested the answer is cement. (this is correct)
 
 ## question 4
 ref: 08_PracticalMachineLearning/027forecasting/index.html
@@ -188,7 +189,31 @@ plot(fcast)
 fcast
 ```
 
+guessed 96% (correct)
 
-????
+## question 5
+
+```{r q5 load}
+set.seed(3523)
+library(AppliedPredictiveModeling)
+library(caret)
+data(concrete)
+inTrain = createDataPartition(concrete$CompressiveStrength, p = 3/4)[[1]]
+training = concrete[ inTrain,]
+testing = concrete[-inTrain,]
+```
+
+Set the seed to 325 and fit a support vector machine using the e1071 package to predict Compressive Strength using the default settings. Predict on the testing set. What is the RMSE?
+
+```{r q5}
+library(e1071)
+library(Metrics)
+set.seed(325)
+modelSVM <- svm(CompressiveStrength ~ ., data=training, method="svm")
+predSVM <- predict(modelSVM, testing)
+
+rmse(testing$CompressiveStrength, predSVM)
+```
 
 
+cloest anser is 6.72 (correct)
