@@ -1,3 +1,5 @@
+# author Andrew E. Davidson
+# 1/23/2016
 library( shiny) 
 shinyUI( pageWithSidebar( 
             headerPanel(" Hello Shiny!"), 
