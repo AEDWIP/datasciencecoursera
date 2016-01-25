@@ -29,7 +29,12 @@ shinyServer(
                                     })
         
         output$varianceGraph <- renderPlot({ 
-            ggplot(dat, aes(x = x, y = y, color = factor)) + geom_line(size = 2)
+            #ggplot(dat, aes(x = x, y = y, color = factor)) + geom_line(size = 2)
+            sd <- input$standarDeviation
+            df <- data.frame(
+                y = dnorm(xvals, mean = 0, sd),
+                x = xvals)
+            ggplot(df, aes(x = x, y = y, color = 'red')) + geom_line(size = 2)
             })
         
     }

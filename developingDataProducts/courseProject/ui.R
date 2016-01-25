@@ -6,8 +6,8 @@ shinyUI( pageWithSidebar(
                 h3('mu Sidebar text'),
                 sliderInput('mu', 'Center of Mass', value = 65, min = 62, max = 74, step = 0.5),                
                 
-                h3('variance Sidebar text'),
-                sliderInput('variance', 'variance', value = 1, min = -3, max = 3, step = 0.1)
+                h3('standard deviation'),
+                sliderInput('standarDeviation', 'Standard Deviation', value = 1, min = 0.1, max = 5, step = 0.1)
             ), 
             
             mainPanel( 
