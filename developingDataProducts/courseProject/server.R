@@ -14,7 +14,7 @@ shinyServer(
             df <- data.frame(
                 y = dnorm(xvals, mean = 0, sd),
                 x = xvals)
-            ggplot(df, aes(x = x, y = y, color = 'red')) + geom_line(size = 2)
+            ggplot(df, aes(x = x, y = y, color = 'red')) + geom_line(size = 2) + annotate("text", x = -1, y = 0.5, label = paste("sd =", sd))
             })
     }
 )
