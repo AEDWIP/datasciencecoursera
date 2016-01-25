@@ -19,15 +19,6 @@ dat <- data.frame(
 
 shinyServer( 
     function(input, output) { 
-        output$newHist <- renderPlot({ 
-                                    hist(galton$child, xlab ='child height',col ='lightblue', main ='Histogram')
-                                        mu <- input$mu
-                                        lines(c( mu, mu), c( 0, 200), col ="red", lwd = 5)
-                                        mse <- mean((galton$child - mu) ^2)
-                                        text(63, 150, paste("mu = ", mu))
-                                        text( 63, 140, paste("MSE = ", round( mse, 2)))
-                                    })
-        
         output$varianceGraph <- renderPlot({ 
             #ggplot(dat, aes(x = x, y = y, color = factor)) + geom_line(size = 2)
             sd <- input$standarDeviation
@@ -36,7 +27,6 @@ shinyServer(
                 x = xvals)
             ggplot(df, aes(x = x, y = y, color = 'red')) + geom_line(size = 2)
             })
-        
     }
 )
 
