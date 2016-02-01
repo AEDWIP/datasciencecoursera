@@ -2,20 +2,34 @@
 title: "README.rmd"
 author: "Andrew E. Davidson"
 date: "January 23, 2016"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
-To run Shinny locally. You should see a new webspage in your browser. By default the URL will be http://127.0.0.1:3228
+# The Shinny App
+This Shinny App makes it easy for users to interactively see how changes to a random variable's variance effects the shape of a Gaussian Distribution.
 
-```{r}
+To run Shinny locally. Open the ui.R and server.R files using R studio. The run the following command
+
+```{r, eval=FALSE}
 library(shiny)
 runApp()
 ```
 
-You can also embed plots, for example:
+You should see a new webspage in your browser. By default the URL will be http://127.0.0.1:3228
 
-```{r, echo=FALSE}
-plot(cars)
+If you prefer a version of this shinny app has been installed on Rstudio's shiny server. You can access it at https://aedwip.shinyapps.io/developingDataProducts_CourseProject/
+
+# The Slidy Presentation
+
+A published version can be found at http://rpubs.com/aedwip/149315
+
+## Changing the presetation
+edit the "Developing Data Products Course Project/index.Rmd" file
+
+## To publish changes
+
+```{r, eval=FALSE}
+publish(title = 'Developing Data Products Course Project', 'index.html', host = 'rpubs')
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
