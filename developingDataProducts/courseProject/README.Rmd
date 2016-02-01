@@ -28,6 +28,13 @@ A published version can be found at http://rpubs.com/aedwip/149315
 ## Changing the presetation
 edit the "Developing Data Products Course Project/index.Rmd" file
 
+Run the following to create local html and markdown files
+
+```{r, eval=FALSE}
+library(slidify)
+slidify("index.Rmd")
+```
+
 ## To publish changes
 
 ```{r, eval=FALSE}
